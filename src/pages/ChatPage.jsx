@@ -28,7 +28,7 @@ function ChatPage({ onSendChat }) {
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       {messages.length === 0 ? (
-        <div className="flex flex-col items-center gap-8 justify-center flex-1 p-6">
+        <div className="flex flex-col items-center gap-8 justify-between flex-1 p-6">
           <ChatDesc />
           <div className="w-full max-w-3xl">
             <ChatCard

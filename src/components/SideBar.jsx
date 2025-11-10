@@ -1,3 +1,4 @@
+import React from "react";
 import { Brain, Ticket, LogOut, Bot, ChevronRight, Cog, Eye, Plus, Edit, Trash2 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
@@ -15,6 +16,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 const items = [
   {
@@ -52,9 +54,29 @@ const machineSubItems = [
   },
 ];
 
-function SideBar() {
+function SideBar({ onLogout }) {
+  const [logoutDialogOpen, setLogoutDialogOpen] = React.useState(false);
+
+  const handleLogoutClick = () => {
+    setLogoutDialogOpen(true);
+  };
+
+  const handleConfirmLogout = () => {
+    onLogout();
+  };
+
   return (
-    <Sidebar collapsible="icon">
+    <>
+      <ConfirmDialog
+        open={logoutDialogOpen}
+        onOpenChange={setLogoutDialogOpen}
+        title="Logout Confirmation"
+        description="Are you sure you want to logout? You will need to login again to access your account."
+        onConfirm={handleConfirmLogout}
+        confirmText="Logout"
+        cancelText="Cancel"
+      />
+      <Sidebar collapsible="icon">
       <SidebarHeader className="h-16 border-sidebar-border flex items-center px-4 group-data-[collapsible=icon]:px-0">
         <div className="flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center">
           <div className="flex h-10 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -120,16 +142,15 @@ function SideBar() {
             <ThemeToggle />
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Log Out">
-              <a href="#" className="flex items-center gap-3">
-                <LogOut className="h-4 w-4" />
-                <span>Log Out</span>
-              </a>
+            <SidebarMenuButton onClick={handleLogoutClick} tooltip="Log Out">
+              <LogOut className="h-4 w-4" />
+              <span>Log Out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
+    </>
   );
 }
 export default SideBar;
