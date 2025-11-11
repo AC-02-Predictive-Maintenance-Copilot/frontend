@@ -8,10 +8,12 @@ import {
 import SideBar from "@/components/SideBar";
 import { Menu } from "lucide-react";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { UserProvider } from "@/context/UserContext";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
+import TicketPage from "./pages/TicketPage";
 import { Routes, Route } from "react-router-dom";
-import { getAccessToken, getUserLogged } from "@/utils/api";
+import { getAccessToken, getUserLogged, removeAccessToken } from "@/utils/api";
 
 function App() {
   const [user, setUser] = React.useState(null);
@@ -45,7 +47,7 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem("accessToken");
+    removeAccessToken();
   };
 
   if (isLoading) {
@@ -60,7 +62,7 @@ function App() {
     return (
       <Routes>
         <Route
-          path="/login"
+          path="/"
           element={<LoginPage loginSuccess={handleLoginSuccess} />}
         />
         <Route path="/register" element={<RegisterPage />} />
@@ -73,26 +75,30 @@ function App() {
   }
 
   return (
-    <ThemeProvider>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full bg-background">
-          <SideBar onLogout={handleLogout} />
-          <SidebarInset className="flex-1">
-            <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4">
-              <SidebarTrigger className="h-8 w-8">
-                <Menu className="h-5 w-5" />
-              </SidebarTrigger>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg font-semibold">Chat Assistant</h1>
-              </div>
-            </header>
-            <main className="">
-              <ChatPage onSendChat={handleSendChat} />
-            </main>
-          </SidebarInset>
-        </div>
-      </SidebarProvider>
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider>
+        <SidebarProvider>
+          <div className="flex min-h-screen w-full bg-background">
+            <SideBar onLogout={handleLogout} user={user} />
+            <SidebarInset className="flex-1">
+              <header className="sticky top-0 z-10 flex h-16 items-center gap-4 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4">
+                <SidebarTrigger className="h-8 w-8">
+                  <Menu className="h-5 w-5" />
+                </SidebarTrigger>
+              </header>
+              <main className="">
+                <Routes>
+                  <Route path="/tickets" element={<TicketPage />} />
+                  <Route path="/chat" element={<ChatPage onSendChat={handleSendChat} user={user} />} />
+                  <Route path="/" element={<ChatPage onSendChat={handleSendChat} user={user} />} />
+
+                </Routes>
+              </main>
+            </SidebarInset>
+          </div>
+        </SidebarProvider>
+      </ThemeProvider>
+    </UserProvider>
   );
 }
 

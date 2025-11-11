@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { login, putAccessToken } from "@/utils/api";
+import { login, putAccessToken, getUserLogged } from "@/utils/api";
 import AlertPopup from "@/components/AlertPopup";
 
 
@@ -51,7 +51,14 @@ function LoginInput({ onLogin }) {
 
       if (!error) {
         putAccessToken(data.accessToken);
-        onLogin(data);
+        
+        const { error: userError, data: userData } = await getUserLogged();
+        
+        if (!userError) {
+          onLogin(userData);
+        } else {
+          onLogin(data);
+        }
       } else {
         showAlert("Login Failed", message || "Please check your credentials and try again.");
       }

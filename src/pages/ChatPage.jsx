@@ -3,7 +3,7 @@ import ChatCard from "@/components/ChatCard";
 import ChatDesc from "@/components/ChatDesc";
 import ChatBubble from "@/components/ChatBubble";
 
-function ChatPage({ onSendChat }) {
+function ChatPage({ onSendChat, user }) {
   const [messages, setMessages] = useState([]);
   const [currentInput, setCurrentInput] = useState("");
 
@@ -29,7 +29,7 @@ function ChatPage({ onSendChat }) {
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       {messages.length === 0 ? (
         <div className="flex flex-col items-center gap-8 justify-between flex-1 p-6">
-          <ChatDesc />
+          <ChatDesc user={user} />
           <div className="w-full max-w-3xl">
             <ChatCard
               handleChange={handleChange}

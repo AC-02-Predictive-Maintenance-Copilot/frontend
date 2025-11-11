@@ -21,12 +21,12 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 const items = [
   {
     title: "Chatbot",
-    url: "#",
+    url: "/chat",
     icon: Brain,
   },
   {
     title: "Ticket",
-    url: "#",
+    url: "/tickets",
     icon: Ticket,
   },
 ];

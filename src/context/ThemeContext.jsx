@@ -12,6 +12,7 @@ export function ThemeProvider({ children }) {
     if (savedTheme) {
       return savedTheme;
     }
+    return "dark";
   });
 
   useEffect(() => {
