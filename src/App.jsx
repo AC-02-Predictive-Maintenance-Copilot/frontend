@@ -13,44 +13,36 @@ import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import TicketPage from "./pages/TicketPage";
 import { Routes, Route } from "react-router-dom";
-import { getAccessToken, getUserLogged, removeAccessToken } from "@/utils/api";
+import { useAuth } from "@/hooks/useAuth";
+import { useTickets } from "@/hooks/useTickets";
 
 function App() {
-  const [user, setUser] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(true);
+  // Custom hooks untuk auth dan tickets
+  const auth = useAuth();
+  const tickets = useTickets();
 
   React.useEffect(() => {
-    const checkSession = async () => {
-      const token = getAccessToken();
-
-      if (token) {
-        const { error, data } = await getUserLogged();
-
-        if (!error) {
-          setUser(data);
-        }
-      }
-
-      setIsLoading(false);
+    const initApp = async () => {
+      await auth.checkSession();
     };
 
-    checkSession();
+    initApp();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Fetch tickets setelah user login
+  React.useEffect(() => {
+    if (auth.user) {
+      tickets.fetchTickets();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.user]);
 
   const handleSendChat = (chat) => {
     console.log("Chat sent:", chat);
   };
 
-  const handleLoginSuccess = (userData) => {
-    setUser(userData);
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    removeAccessToken();
-  };
-
-  if (isLoading) {
+  if (auth.isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p>Loading...</p>
@@ -58,28 +50,42 @@ function App() {
     );
   }
 
-  if (!user) {
+// Page login dan regis jika belum login
+  if (!auth.user) {
     return (
       <Routes>
         <Route
           path="/"
-          element={<LoginPage loginSuccess={handleLoginSuccess} />}
+          element={
+            <LoginPage 
+              login={auth.login} 
+              error={auth.error} 
+              clearError={auth.clearError}
+            />
+          }
         />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register" element={<RegisterPage register={auth.register} error={auth.error} clearError={auth.clearError} />} />
         <Route
           path="*"
-          element={<LoginPage loginSuccess={handleLoginSuccess} />}
+          element={
+            <LoginPage 
+              login={auth.login} 
+              error={auth.error} 
+              clearError={auth.clearError}
+            />
+          }
         />
       </Routes>
     );
   }
 
+// Main app di sini
   return (
     <UserProvider>
       <ThemeProvider>
-        <SidebarProvider>
+        <SidebarProvider defaultOpen={false}>
           <div className="flex min-h-screen w-full bg-background">
-            <SideBar onLogout={handleLogout} user={user} />
+            <SideBar onLogout={auth.logout} user={auth.user} />
             <SidebarInset className="flex-1">
               <header className="sticky top-0 z-10 flex h-16 items-center gap-4 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4">
                 <SidebarTrigger className="h-8 w-8">
@@ -88,10 +94,27 @@ function App() {
               </header>
               <main className="">
                 <Routes>
-                  <Route path="/tickets" element={<TicketPage />} />
-                  <Route path="/chat" element={<ChatPage onSendChat={handleSendChat} user={user} />} />
-                  <Route path="/" element={<ChatPage onSendChat={handleSendChat} user={user} />} />
-
+                  <Route
+                    path="/tickets"
+                    element={
+                      <TicketPage
+                        tickets={tickets.tickets}
+                        loading={tickets.loading}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/chat"
+                    element={
+                      <ChatPage onSendChat={handleSendChat} user={auth.user} />
+                    }
+                  />
+                  <Route
+                    path="/"
+                    element={
+                      <ChatPage onSendChat={handleSendChat} user={auth.user} />
+                    }
+                  />
                 </Routes>
               </main>
             </SidebarInset>

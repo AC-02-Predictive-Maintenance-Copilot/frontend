@@ -27,9 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ticket from "@/utils/data";
 
-const data = ticket;
 const columns = [
   {
     accessorKey: "id",
@@ -115,7 +113,7 @@ const columns = [
         </div>
       );
     },
-        sortingFn: (rowA, rowB) => {
+    sortingFn: (rowA, rowB) => {
       const statusOrder = { open: 3, "in-progress": 2, resolved: 1 };
       const statusA = statusOrder[rowA.getValue("status")];
       const statusB = statusOrder[rowB.getValue("status")];
@@ -181,7 +179,8 @@ const columns = [
   },
 ];
 
-export function DataTableDemo() {
+function DataTableDemo({ tickets = [] }) {
+  const data = React.useMemo(() => tickets || [], [tickets]);
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -319,3 +318,5 @@ export function DataTableDemo() {
     </div>
   );
 }
+
+export { DataTableDemo };

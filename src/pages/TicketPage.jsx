@@ -1,7 +1,7 @@
 import React from "react";
 import { DataTableDemo } from "@/components/TicketTable";
 
-function TicketPage() {
+function TicketPage({ tickets, loading }) {
   return (
     <div className="flex-1 w-full p-6">
       <div className="mb-6">
@@ -10,7 +10,14 @@ function TicketPage() {
           Manage and track all maintenance tickets
         </p>
       </div>
-      <DataTableDemo />
+
+      {loading && (
+        <div className="flex items-center justify-center py-8">
+          <p className="text-muted-foreground">Loading tickets...</p>
+        </div>
+      )}
+
+      <DataTableDemo tickets={tickets} />
     </div>
   );
 }

@@ -1,11 +1,11 @@
-const BASE_URL = 'https://notes-api.dicoding.dev/v1';
-
+const BASE_URL = "https://notes-api.dicoding.dev/v1";
+import ticket from "./data";
 function getAccessToken() {
-  return localStorage.getItem('accessToken');
+  return localStorage.getItem("accessToken");
 }
 
 function putAccessToken(accessToken) {
-  return localStorage.setItem('accessToken', accessToken);
+  return localStorage.setItem("accessToken", accessToken);
 }
 
 async function fetchWithToken(url, options = {}) {
@@ -20,16 +20,16 @@ async function fetchWithToken(url, options = {}) {
 
 async function login({ email, password }) {
   const response = await fetch(`${BASE_URL}/login`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
   });
 
   const responseJson = await response.json();
 
-  if (responseJson.status !== 'success') {
+  if (responseJson.status !== "success") {
     return { error: true, data: null, message: responseJson.message };
   }
 
@@ -38,16 +38,16 @@ async function login({ email, password }) {
 
 async function register({ name, email, password }) {
   const response = await fetch(`${BASE_URL}/register`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ name, email, password }),
   });
 
   const responseJson = await response.json();
 
-  if (responseJson.status !== 'success') {
+  if (responseJson.status !== "success") {
     return { error: true, message: responseJson.message };
   }
 
@@ -58,7 +58,7 @@ async function getUserLogged() {
   const response = await fetchWithToken(`${BASE_URL}/users/me`);
   const responseJson = await response.json();
 
-  if (responseJson.status !== 'success') {
+  if (responseJson.status !== "success") {
     return { error: true, data: null };
   }
 
@@ -66,7 +66,20 @@ async function getUserLogged() {
 }
 
 function removeAccessToken() {
-  return localStorage.removeItem('accessToken');
+  return localStorage.removeItem("accessToken");
 }
 
-export { getAccessToken, putAccessToken, removeAccessToken, login, register, getUserLogged };
+async function getTickets() {
+  const data = ticket;
+  return { error: false, data };
+}
+
+export {
+  getAccessToken,
+  putAccessToken,
+  removeAccessToken,
+  login,
+  register,
+  getUserLogged,
+  getTickets,
+};

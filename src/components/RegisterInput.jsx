@@ -13,22 +13,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "@/utils/api";
 import AlertPopup from "@/components/AlertPopup";
 
-const RegisterInput = () => {
+const RegisterInput = ({ register, error, clearError }) => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [alertOpen, setAlertOpen] = React.useState(false);
-  const [alertMessage, setAlertMessage] = React.useState({
-    title: "",
-    description: "",
-  });
+
   const [nameError, setNameError] = React.useState("");
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (error) {
+      setAlertOpen(true);
+    }
+  }, [error]);
 
   const validateName = (value) => {
     // Regex untuk hanya mengizinkan huruf (a-z, A-Z) dan spasi
@@ -66,11 +68,10 @@ const RegisterInput = () => {
     setPassword(event.target.value);
   };
 
-    const togglePasswordVisibility = () => {
+  const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const showAlert = (title, description, onClose) => {
-    setAlertMessage({ title, description });
+  const showAlert = (onClose) => {
     setAlertOpen(true);
     if (onClose) {
       setTimeout(() => onClose(), 100);
@@ -94,48 +95,30 @@ const RegisterInput = () => {
     setIsLoading(true);
 
     try {
-      const { error, message } = await register({
-        name: name.trim(),
-        email,
-        password,
-      });
+      const result = await register(name.trim(), email, password);
 
-      if (!error) {
-        showAlert(
-          "Registration Successful!",
-          "Your account has been created. Please login to continue.",
-          setTimeout(() => {
-            navigate("/login");
-          }, 1500)
-        );
-      } else {
-        showAlert(
-          "Registration Failed",
-          message || "Please check your information and try again."
-        );
+      if (result?.success) {
+        navigate("/");
       }
     } catch (err) {
-      showAlert(
-        "Registration Failed",
-        "An unexpected error occurred. Please try again."
-      );
-      console.error(err);
+      console.error("Registration error:", err);
     } finally {
       setIsLoading(false);
+    }
+  };
+  const handleAlertClose = (open) => {
+    setAlertOpen(open);
+    if (!open && error) {
+      clearError();
     }
   };
   return (
     <>
       <AlertPopup
         open={alertOpen}
-        onOpenChange={(open) => {
-          setAlertOpen(open);
-          if (!open && alertMessage.title === "Registration Successful!") {
-            navigate("/");
-          }
-        }}
-        title={alertMessage.title}
-        description={alertMessage.description}
+        onOpenChange={handleAlertClose}
+        title="Registration Failed"
+        description={error}
       />
       <Card className="w-full max-w-sm">
         <CardHeader>
@@ -191,18 +174,20 @@ const RegisterInput = () => {
                     onChange={onPasswordChange}
                     className="pr-10"
                   />
-                                  <button
-                  type="button"
-                  onClick={togglePasswordVisibility}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
