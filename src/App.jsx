@@ -95,7 +95,7 @@ function App() {
               <main className="">
                 <Routes>
                   <Route
-                    path="/tickets"
+                    path="/tickets/view"
                     element={
                       <TicketPage
                         tickets={tickets.tickets}

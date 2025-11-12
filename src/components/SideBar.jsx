@@ -1,22 +1,5 @@
 import React from "react";
-import {
-  Brain,
-  Ticket,
-  LogOut,
-  Bot,
-  ChevronRight,
-  Cog,
-  Eye,
-  Plus,
-  Edit,
-  Trash2,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Brain, Bot, Cog, Eye, Plus, Monitor, Ticket } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -24,50 +7,65 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { NavUser } from "./AvatarProfile";
+import SidebarMenuSimple from "@/components/SidebarMenuSimple";
+import SidebarMenuCollapsible from "@/components/SidebarMenuCollapsible";
 
-const items = [
+// Menu items
+const simpleMenuItems = [
+  {
+    title: "Overview",
+    url: "/home",
+    icon: Monitor,
+  },
   {
     title: "Chatbot",
     url: "/chat",
     icon: Brain,
   },
-  {
-    title: "Ticket",
-    url: "/tickets",
-    icon: Ticket,
-  },
 ];
 
-const machineSubItems = [
+// Submenu items
+const collapsibleMenuItems = [
   {
-    title: "View Machine",
-    url: "#view",
-    icon: Eye,
+    title: "Machine",
+    icon: Cog,
+    defaultOpen: false,
+    subItems: [
+      {
+        title: "View Machine",
+        url: "#view",
+        icon: Eye,
+      },
+      {
+        title: "Add Machine",
+        url: "#add",
+        icon: Plus,
+      },
+    ],
   },
   {
-    title: "Add Machine",
-    url: "#add",
-    icon: Plus,
-  },
-  {
-    title: "Edit Machine",
-    url: "#edit",
-    icon: Edit,
-  },
-  {
-    title: "Delete Machine",
-    url: "#delete",
-    icon: Trash2,
+    title: "Ticket",
+    icon: Ticket,
+    defaultOpen: false,
+    subItems: [
+      {
+        title: "View Tickets",
+        url: "/tickets/view",
+        icon: Eye,
+      },
+      {
+        title: "Create Ticket",
+        url: "/tickets/add",
+        icon: Plus,
+      },
+    ],
   },
 ];
 
@@ -112,44 +110,18 @@ function SideBar({ onLogout, user }) {
             <SidebarGroupLabel className="px-2 text-xs">Menu</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                <Collapsible defaultOpen className="group/collapsible">
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton tooltip="Machine">
-                        <Cog className="h-4 w-4" />
-                        <span>Machine</span>
-                        <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {machineSubItems.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuButton asChild>
-                              <Link
-                                to={subItem.url}
-                                className="flex items-center gap-3"
-                              >
-                                <subItem.icon className="h-3.5 w-3.5" />
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild tooltip={item.title}>
-                      <Link to={item.url} className="flex items-center gap-3">
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                {/* Modularisasi menu sidebar menjadi komponen terpisah */}
+                {simpleMenuItems.map((item) => (
+                  <SidebarMenuSimple key={item.title} item={item} />
+                ))}
+                {collapsibleMenuItems.map((menu) => (
+                  <SidebarMenuCollapsible
+                    key={menu.title}
+                    title={menu.title}
+                    icon={menu.icon}
+                    subItems={menu.subItems}
+                    defaultOpen={menu.defaultOpen}
+                  />
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
