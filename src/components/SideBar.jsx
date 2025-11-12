@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { NavUser } from "./AvatarProfile";
 
 const items = [
   {
@@ -70,7 +71,7 @@ const machineSubItems = [
   },
 ];
 
-function SideBar({ onLogout }) {
+function SideBar({ onLogout, user }) {
   const [logoutDialogOpen, setLogoutDialogOpen] = React.useState(false);
 
   const handleLogoutClick = () => {
@@ -161,10 +162,7 @@ function SideBar({ onLogout }) {
               <ThemeToggle />
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={handleLogoutClick} tooltip="Log Out">
-                <LogOut className="h-4 w-4" />
-                <span>Log Out</span>
-              </SidebarMenuButton>
+              <NavUser user={user} logout={handleLogoutClick} />
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
