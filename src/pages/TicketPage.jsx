@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { DataTableDemo } from "@/components/TicketTable";
+import DataTableDemo from "@/components/TicketTable";
 import HeaderText from "@/components/HeaderText";
 
 function TicketPage({ tickets, loading }) {

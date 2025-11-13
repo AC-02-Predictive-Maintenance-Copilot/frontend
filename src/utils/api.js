@@ -78,6 +78,10 @@ async function createTicket(ticketData) {
   console.log("Creating ticket:", ticketData);
 }
 
+async function deleteTicket(ticketId) {
+  console.log("Deleting ticket with ID:", ticketId);
+}
+
 export {
   getAccessToken,
   putAccessToken,
@@ -87,4 +91,5 @@ export {
   getUserLogged,
   getTickets,
   createTicket,
+  deleteTicket,
 };
