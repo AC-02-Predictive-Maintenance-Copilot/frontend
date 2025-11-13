@@ -4,7 +4,7 @@ const ticket = [
     machineId: "MC-101",
     priority: "high",
     status: "open",
-    description: "Overheating issue detected",
+    problem: "Overheating issue detected",
     createdAt: "11-11-2025",
   },
   {
@@ -12,7 +12,7 @@ const ticket = [
     machineId: "MC-102",
     priority: "medium",
     status: "in-progress",
-    description: "Unusual vibration patterns",
+    problem: "Unusual vibration patterns",
     createdAt: "11-11-2025",
   },
   {
@@ -20,7 +20,7 @@ const ticket = [
     machineId: "MC-103",
     priority: "low",
     status: "resolved",
-    description: "Routine maintenance check",
+    problem: "Routine maintenance check",
     createdAt: "11-11-2025",
   },
   {
@@ -28,7 +28,7 @@ const ticket = [
     machineId: "MC-104",
     priority: "high",
     status: "open",
-    description: "Pressure sensor malfunction",
+    problem: "Pressure sensor malfunction",
     createdAt: "11-11-2025",
   },
   {
@@ -36,7 +36,7 @@ const ticket = [
     machineId: "MC-105",
     priority: "medium",
     status: "in-progress",
-    description: "Oil level low warning",
+    problem: "Oil level low warning",
     createdAt: "01-11-2025",
   },
   {
@@ -44,7 +44,7 @@ const ticket = [
     machineId: "MC-101",
     priority: "high",
     status: "open",
-    description: "Overheating issue detected",
+    problem: "Overheating issue detected",
     createdAt: "10-11-2025",
   },
   {
@@ -52,7 +52,7 @@ const ticket = [
     machineId: "MC-102",
     priority: "medium",
     status: "in-progress",
-    description: "Unusual vibration patterns",
+    problem: "Unusual vibration patterns",
     createdAt: "02-11-2025",
   },
   {
@@ -60,7 +60,7 @@ const ticket = [
     machineId: "MC-103",
     priority: "low",
     status: "resolved",
-    description: "Routine maintenance check",
+    problem: "Routine maintenance check",
     createdAt: "03-11-2025",
   },
   {
@@ -68,7 +68,7 @@ const ticket = [
     machineId: "MC-104",
     priority: "high",
     status: "open",
-    description: "Pressure sensor malfunction",
+    problem: "Pressure sensor malfunction",
     createdAt: "12-01-2025",
   },
   {
@@ -76,7 +76,7 @@ const ticket = [
     machineId: "MC-105",
     priority: "medium",
     status: "in-progress",
-    description: "Oil level low warning",
+    problem: "Oil level low warning",
     createdAt: "11-01-2024",
   },
   {
@@ -84,7 +84,7 @@ const ticket = [
     machineId: "MC-101",
     priority: "high",
     status: "open",
-    description: "Overheating issue detected",
+    problem: "Overheating issue detected",
     createdAt: "15-01-2024",
   },
   {
@@ -92,7 +92,7 @@ const ticket = [
     machineId: "MC-102",
     priority: "medium",
     status: "in-progress",
-    description: "Unusual vibration patterns",
+    problem: "Unusual vibration patterns",
     createdAt: "14-01-2025",
   },
   {
@@ -100,7 +100,7 @@ const ticket = [
     machineId: "MC-103",
     priority: "low",
     status: "resolved",
-    description: "Routine maintenance check",
+    problem: "Routine maintenance check",
     createdAt: "13-09-2025",
   },
   {
@@ -108,7 +108,7 @@ const ticket = [
     machineId: "MC-104",
     priority: "high",
     status: "open",
-    description: "Pressure sensor malfunction",
+    problem: "Pressure sensor malfunction",
     createdAt: "12-01-2025",
   },
   {
@@ -116,7 +116,7 @@ const ticket = [
     machineId: "MC-105",
     priority: "medium",
     status: "in-progress",
-    description: "Oil level low warning",
+    problem: "Oil level low warning",
     createdAt: "11-10-2025",
   },
 ];

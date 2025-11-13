@@ -1,4 +1,6 @@
 import React from "react";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -98,7 +100,12 @@ const RegisterInput = ({ register, error, clearError }) => {
       const result = await register(name.trim(), email, password);
 
       if (result?.success) {
-        navigate("/");
+        toast.success("Registration successful! Redirecting to login... 🎉", {
+          duration: 1500,
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       }
     } catch (err) {
       console.error("Registration error:", err);
@@ -120,7 +127,13 @@ const RegisterInput = ({ register, error, clearError }) => {
         title="Registration Failed"
         description={error}
       />
-      <Card className="w-full max-w-sm">
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        className="w-full max-w-sm"
+      >
+        <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Maintenance Copilot Dashboard</CardTitle>
           <CardDescription>
@@ -204,6 +217,7 @@ const RegisterInput = ({ register, error, clearError }) => {
           </Button>
         </CardFooter>
       </Card>
+      </motion.div>
     </>
   );
 };

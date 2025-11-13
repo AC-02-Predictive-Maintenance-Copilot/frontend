@@ -1,4 +1,5 @@
 import * as React from "react";
+import { motion } from "framer-motion";
 import {
   flexRender,
   getCoreRowModel,
@@ -121,11 +122,11 @@ const columns = [
     },
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "problem",
+    header: "Problem",
     cell: ({ row }) => (
       <div className="max-w-[300px] truncate">
-        {row.getValue("description")}
+        {row.getValue("problem")}
       </div>
     ),
   },
@@ -270,8 +271,17 @@ function DataTableDemo({ tickets = [] }) {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+              table.getRowModel().rows.map((row, index) => (
+                <motion.tr
+                  key={row.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    delay: index * 0.05,
+                    duration: 0.3 
+                  }}
+                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-center">
                       {flexRender(
@@ -280,7 +290,7 @@ function DataTableDemo({ tickets = [] }) {
                       )}
                     </TableCell>
                   ))}
-                </TableRow>
+                </motion.tr>
               ))
             ) : (
               <TableRow>

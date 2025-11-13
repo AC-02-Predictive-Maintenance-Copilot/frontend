@@ -12,9 +12,12 @@ import { UserProvider } from "@/context/UserContext";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import TicketPage from "./pages/TicketPage";
+import CreateTicketPage from "./pages/CreateTicketPage";
+import OverviewPage from "./pages/OverviewPage";
 import { Routes, Route } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTickets } from "@/hooks/useTickets";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   // Custom hooks untuk auth dan tickets
@@ -42,6 +45,12 @@ function App() {
     console.log("Chat sent:", chat);
   };
 
+  const handleTicketCreated = (ticketData) => {
+    console.log("New ticket created:", ticketData);
+    // Refresh tickets list
+    tickets.fetchTickets();
+  };
+
   if (auth.isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -53,29 +62,34 @@ function App() {
 // Page login dan regis jika belum login
   if (!auth.user) {
     return (
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <LoginPage 
-              login={auth.login} 
-              error={auth.error} 
-              clearError={auth.clearError}
-            />
-          }
-        />
-        <Route path="/register" element={<RegisterPage register={auth.register} error={auth.error} clearError={auth.clearError} />} />
-        <Route
-          path="*"
-          element={
-            <LoginPage 
-              login={auth.login} 
-              error={auth.error} 
-              clearError={auth.clearError}
-            />
-          }
-        />
-      </Routes>
+      <>
+        <Toaster />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LoginPage 
+                login={auth.login} 
+                error={auth.error} 
+                clearError={auth.clearError}
+                isLoading={auth.isLoading}
+              />
+            }
+          />
+          <Route path="/register" element={<RegisterPage register={auth.register} error={auth.error} clearError={auth.clearError} />} />
+          <Route
+            path="*"
+            element={
+              <LoginPage 
+                login={auth.login} 
+                error={auth.error} 
+                clearError={auth.clearError}
+                isLoading={auth.isLoading}
+              />
+            }
+          />
+        </Routes>
+      </>
     );
   }
 
@@ -104,21 +118,36 @@ function App() {
                     }
                   />
                   <Route
+                    path="/tickets/create"
+                    element={
+                      <CreateTicketPage
+                        onTicketCreated={handleTicketCreated}
+                      />
+                    }
+                  />
+                  <Route
                     path="/chat"
                     element={
                       <ChatPage onSendChat={handleSendChat} user={auth.user} />
                     }
                   />
                   <Route
+                    path="/overview"
+                    element={
+                      <OverviewPage />
+                    }
+                  />
+                  <Route
                     path="/"
                     element={
-                      <ChatPage onSendChat={handleSendChat} user={auth.user} />
+                      <OverviewPage />
                     }
                   />
                 </Routes>
               </main>
             </SidebarInset>
           </div>
+          <Toaster />
         </SidebarProvider>
       </ThemeProvider>
     </UserProvider>

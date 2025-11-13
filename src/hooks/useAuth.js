@@ -61,8 +61,11 @@ export function useAuth() {
         return;
       }
 
-      setUser(userData);
-      setError(null);
+      // Delay sebelum setUser agar toast notification sempat ditampilkan
+      setTimeout(() => {
+        setUser(userData);
+        setError(null);
+      }, 1500);
     } catch (err) {
       setError(err.message || "An unexpected error occurred");
     }

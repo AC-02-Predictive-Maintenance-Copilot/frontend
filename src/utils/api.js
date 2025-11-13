@@ -74,6 +74,10 @@ async function getTickets() {
   return { error: false, data };
 }
 
+async function createTicket(ticketData) {
+  console.log("Creating ticket:", ticketData);
+}
+
 export {
   getAccessToken,
   putAccessToken,
@@ -82,4 +86,5 @@ export {
   register,
   getUserLogged,
   getTickets,
+  createTicket,
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import ChatCard from "@/components/ChatCard";
 import ChatDesc from "@/components/ChatDesc";
 import ChatBubble from "@/components/ChatBubble";
@@ -26,11 +27,16 @@ function ChatPage({ onSendChat, user }) {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)]">
+    <motion.div 
+      className="flex flex-col h-[calc(100vh-4rem)]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       {messages.length === 0 ? (
         <div className="flex flex-col items-center gap-8 justify-between flex-1 p-6">
           <ChatDesc user={user} />
-          <div className="w-full max-w-3xl">
+          <div className="w-full max-w-6xl">
             <ChatCard
               handleChange={handleChange}
               handleSubmit={handleSubmit}
@@ -41,7 +47,7 @@ function ChatPage({ onSendChat, user }) {
       ) : (
         <>
           <div className="flex-1 overflow-y-auto px-4 py-6">
-            <div className="max-w-4xl mx-auto space-y-4">
+            <div className="max-w-6xl mx-auto space-y-4">
               {messages.map((message) => (
                 <ChatBubble
                   key={message.id}
@@ -53,7 +59,7 @@ function ChatPage({ onSendChat, user }) {
           </div>
 
           <div className="border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4">
-            <div className="max-w-4xl mx-auto py-4">
+            <div className="max-w-6xl mx-auto py-4">
               <ChatCard
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
@@ -63,7 +69,7 @@ function ChatPage({ onSendChat, user }) {
           </div>
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
 

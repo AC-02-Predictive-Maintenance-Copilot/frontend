@@ -21,7 +21,7 @@ import SidebarMenuCollapsible from "@/components/SidebarMenuCollapsible";
 const simpleMenuItems = [
   {
     title: "Overview",
-    url: "/home",
+    url: "/overview",
     icon: Monitor,
   },
   {
@@ -62,7 +62,7 @@ const collapsibleMenuItems = [
       },
       {
         title: "Create Ticket",
-        url: "/tickets/add",
+        url: "/tickets/create",
         icon: Plus,
       },
     ],

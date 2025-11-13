@@ -1,4 +1,6 @@
 import React from "react";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,12 +22,24 @@ function LoginInput({ login, error, clearError, isLoading }) {
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [alertOpen, setAlertOpen] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   React.useEffect(() => {
     if (error) {
       setAlertOpen(true);
+      setIsSubmitting(false);
     }
   }, [error]);
+
+  // Show success toast setelah login success (no error dan tidak submitting lagi)
+  React.useEffect(() => {
+    if (isSubmitting && !error && isLoading === false) {
+      toast.success("Login successful! Welcome back 👋", {
+        duration: 1500, // 3 detik
+      });
+      setIsSubmitting(false);
+    }
+  }, [error, isLoading, isSubmitting]);
 
   const onEmailChange = (event) => {
     setEmail(event.target.value);
@@ -48,6 +62,7 @@ function LoginInput({ login, error, clearError, isLoading }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     login(email, password);
   };
 
@@ -59,7 +74,13 @@ function LoginInput({ login, error, clearError, isLoading }) {
         title="Login Failed"
         description={error}
       />
-      <Card className="w-full max-w-sm">
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        className="w-full max-w-sm"
+      >
+        <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Maintenance Copilot Dashboard</CardTitle>
           <CardDescription>
@@ -128,6 +149,7 @@ function LoginInput({ login, error, clearError, isLoading }) {
           </Button>
         </CardFooter>
       </Card>
+      </motion.div>
     </>
   );
 }
