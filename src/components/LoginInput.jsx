@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,24 +21,12 @@ function LoginInput({ login, error, clearError, isLoading }) {
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [alertOpen, setAlertOpen] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   React.useEffect(() => {
     if (error) {
       setAlertOpen(true);
-      setIsSubmitting(false);
     }
   }, [error]);
-
-  // Show success toast setelah login success (no error dan tidak submitting lagi)
-  React.useEffect(() => {
-    if (isSubmitting && !error && isLoading === false) {
-      toast.success("Login successful! Welcome back 👋", {
-        duration: 1500, // 3 detik
-      });
-      setIsSubmitting(false);
-    }
-  }, [error, isLoading, isSubmitting]);
 
   const onEmailChange = (event) => {
     setEmail(event.target.value);
@@ -62,7 +49,6 @@ function LoginInput({ login, error, clearError, isLoading }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     login(email, password);
   };
 

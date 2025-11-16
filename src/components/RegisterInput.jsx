@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -105,9 +104,6 @@ const RegisterInput = ({ register, error, clearError }) => {
       const result = await register(name.trim(), username.trim(), email, password);
 
       if (result?.success) {
-        toast.success("Registration successful! Redirecting to login... 🎉", {
-          duration: 1500,
-        });
         setTimeout(() => {
           navigate("/");
         }, 1500);

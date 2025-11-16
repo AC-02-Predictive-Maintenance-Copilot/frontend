@@ -19,6 +19,8 @@ async function fetchWithToken(url, options = {}) {
 }
 
 async function login({ email, password }) {
+  const { toast } = await import("sonner");
+  
   const response = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
@@ -34,10 +36,15 @@ async function login({ email, password }) {
   }
 
   // Backend mengembalikan { message, data: { token, user } }
+  toast.success(`Login successful! Welcome back 👋 ${responseJson.data.user.name}`, {
+    duration: 1500,
+  });
   return { error: false, data: responseJson.data };
 }
 
 async function register({ name, username, email, password }) {
+  const { toast } = await import("sonner");
+  
   const response = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
@@ -51,6 +58,10 @@ async function register({ name, username, email, password }) {
   if (!response.ok || responseJson.error) {
     return { error: true, message: responseJson.message || "Registration failed" };
   }
+
+  toast.success("Registration successful! Redirecting to login... 🎉", {
+    duration: 1500,
+  });
 
   return { error: false, data: responseJson.data };
 }
