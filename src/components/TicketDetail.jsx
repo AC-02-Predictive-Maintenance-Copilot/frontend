@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge, PriorityBadge } from "@/components/StatusBadge";
 
 export function TicketDetailDialog({ ticket, open, onOpenChange }) {
   if (!ticket) return null;
@@ -22,8 +22,8 @@ export function TicketDetailDialog({ ticket, open, onOpenChange }) {
             Ticket Detail - #{ticket.id}
           </DialogTitle>
           <div className="flex gap-2 mt-2">
-            <Badge>{ticket.status}</Badge>
-            <Badge variant="destructive">{ticket.priority}</Badge>
+            <StatusBadge status={ticket.status} />
+            <PriorityBadge priority={ticket.priority} />
           </div>
           <DialogDescription>
             Ticket details and information
@@ -33,22 +33,22 @@ export function TicketDetailDialog({ ticket, open, onOpenChange }) {
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label className="font-semibold">Problem</Label>
-            <p className="text-sm">{ticket.problem}</p>
+            <p className="text-sm">{ticket.problem || "N/A"}</p>
           </div>
           
           <div className="grid gap-2">
             <Label className="font-semibold">Description</Label>
-            <p className="text-sm">{ticket.details}</p>
+            <p className="text-sm">{ticket.description || ticket.details || "N/A"}</p>
           </div>
 
           <div className="grid gap-2">
             <Label className="font-semibold">Machine ID</Label>
-            <p className="text-sm">{ticket.machineId}</p>
+            <p className="text-sm font-mono">{ticket.machineId}</p>
           </div>
 
           <div className="grid gap-2">
             <Label className="font-semibold">Created At</Label>
-            <p className="text-sm">{ticket.createdAt}</p>
+            <p className="text-sm">{ticket.createdAt || "N/A"}</p>
           </div>
         </div>
 
