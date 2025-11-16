@@ -1,9 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 import DataTableDemo from "@/components/TicketTable";
+import { TicketDetailDialog } from "@/components/TicketDetail";
 import HeaderText from "@/components/HeaderText";
 
 function TicketPage({ tickets, loading }) {
+  const [detailOpen, setDetailOpen] = React.useState(false);
+  const [selectedTicket, setSelectedTicket] = React.useState(null);
+
+  const handleViewDetails = (ticket) => {
+    setSelectedTicket(ticket);
+    setDetailOpen(true);
+  };
+
   return (
     <motion.div 
       className="flex-1 w-full p-6"
@@ -22,7 +31,14 @@ function TicketPage({ tickets, loading }) {
           </div>
         )}
 
-        <DataTableDemo tickets={tickets} />
+        <DataTableDemo tickets={tickets} onViewDetails={handleViewDetails} />
+
+        {/* Ticket Detail Modal */}
+        <TicketDetailDialog 
+          ticket={selectedTicket}
+          open={detailOpen}
+          onOpenChange={setDetailOpen}
+        />
       </div>
     </motion.div>
   );

@@ -31,7 +31,7 @@ import ConfirmDialog from "./ConfirmDialog";
 import { deleteTicket } from "@/utils/api";
 import CreateColumns from "./ColumnTicketTable";
 
-function DataTableDemo({ tickets = [] }) {
+function DataTableDemo({ tickets = [], onViewDetails }) {
   const data = React.useMemo(() => tickets || [], [tickets]);
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -57,7 +57,7 @@ function DataTableDemo({ tickets = [] }) {
     setSelectedTicketId(null);
   };
 
-  const columns = CreateColumns(handleDeleteClick);
+  const columns = CreateColumns(handleDeleteClick, onViewDetails);
 
   const table = useReactTable({
     data,

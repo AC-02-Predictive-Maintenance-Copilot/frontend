@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-const CreateColumns = (handleDeleteClick) => [
+const CreateColumns = (handleDeleteClick, handleViewDetails) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -149,7 +149,9 @@ const CreateColumns = (handleDeleteClick) => [
               Copy ticket ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View details</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleViewDetails(ticket)}>
+              View details
+            </DropdownMenuItem>
             <DropdownMenuItem>Edit ticket</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

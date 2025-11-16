@@ -19,6 +19,7 @@ import AlertPopup from "@/components/AlertPopup";
 
 const RegisterInput = ({ register, error, clearError }) => {
   const [name, setName] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
@@ -66,6 +67,10 @@ const RegisterInput = ({ register, error, clearError }) => {
     setEmail(event.target.value);
   };
 
+  const onUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
   const onPasswordChange = (event) => {
     setPassword(event.target.value);
   };
@@ -97,7 +102,7 @@ const RegisterInput = ({ register, error, clearError }) => {
     setIsLoading(true);
 
     try {
-      const result = await register(name.trim(), email, password);
+      const result = await register(name.trim(), username.trim(), email, password);
 
       if (result?.success) {
         toast.success("Registration successful! Redirecting to login... 🎉", {
@@ -162,6 +167,17 @@ const RegisterInput = ({ register, error, clearError }) => {
                 {nameError && (
                   <p className="text-sm text-red-500 mt-1">{nameError}</p>
                 )}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="ahmaddhani"
+                  required
+                  value={username}
+                  onChange={onUsernameChange}
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>

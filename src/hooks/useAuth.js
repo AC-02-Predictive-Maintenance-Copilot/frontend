@@ -22,6 +22,8 @@ export function useAuth() {
 
     if (token) {
       const { error, data } = await getUserLogged();
+      
+      console.log("getUserLogged response:", { error, data });
 
       if (!error) {
         setUser(data);
@@ -50,20 +52,13 @@ export function useAuth() {
         return;
       }
 
-      // Simpan token ke local storage
-      putAccessToken(data.accessToken);
-
-      const { error: userError, data: userData } = await getUserLogged();
-
-      if (userError) {
-        setError("Failed to get user data");
-        removeAccessToken();
-        return;
-      }
+      // Simpan token ke local storage (backend mengembalikan data.token)
+      putAccessToken(data.token);
 
       // Delay sebelum setUser agar toast notification sempat ditampilkan
+      // Backend sudah mengembalikan data.user langsung
       setTimeout(() => {
-        setUser(userData);
+        setUser(data.user);
         setError(null);
       }, 1500);
     } catch (err) {
@@ -84,11 +79,12 @@ export function useAuth() {
   }, []);
 
   // Register ambil api dari api.js dan error handling di sini
-  const register = useCallback(async (name, email, password) => {
+  const register = useCallback(async (name, username, email, password) => {
     setError(null);
     try {
       const { error: registerError, message } = await registerAPI({
         name,
+        username,
         email,
         password,
       });

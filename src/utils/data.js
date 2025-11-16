@@ -5,6 +5,7 @@ const ticket = [
     priority: "high",
     status: "open",
     problem: "Overheating issue detected",
+    details: "The machine is overheating due to a possible coolant leak.",
     createdAt: "11-11-2025",
   },
   {
@@ -13,6 +14,7 @@ const ticket = [
     priority: "medium",
     status: "in-progress",
     problem: "Unusual vibration patterns",
+    details: "The machine is experiencing unusual vibrations that may indicate a mechanical issue.",
     createdAt: "11-11-2025",
   },
   {
@@ -21,6 +23,7 @@ const ticket = [
     priority: "low",
     status: "resolved",
     problem: "Routine maintenance check",
+    details: "The machine underwent a routine maintenance check and all systems are functioning properly.",
     createdAt: "11-11-2025",
   },
   {
@@ -29,6 +32,7 @@ const ticket = [
     priority: "high",
     status: "open",
     problem: "Pressure sensor malfunction",
+    details: "The pressure sensor is malfunctioning and needs to be replaced.",
     createdAt: "11-11-2025",
   },
   {
@@ -37,6 +41,7 @@ const ticket = [
     priority: "medium",
     status: "in-progress",
     problem: "Oil level low warning",
+    details: "The oil level is low and needs to be refilled.",
     createdAt: "01-11-2025",
   },
   {
@@ -45,6 +50,7 @@ const ticket = [
     priority: "high",
     status: "open",
     problem: "Overheating issue detected",
+    details: "The machine is overheating due to a possible coolant leak.",
     createdAt: "10-11-2025",
   },
   {
@@ -53,6 +59,7 @@ const ticket = [
     priority: "medium",
     status: "in-progress",
     problem: "Unusual vibration patterns",
+    details: "The machine is experiencing unusual vibrations that may indicate a mechanical issue.",
     createdAt: "02-11-2025",
   },
   {
@@ -61,6 +68,7 @@ const ticket = [
     priority: "low",
     status: "resolved",
     problem: "Routine maintenance check",
+    details: "The machine underwent a routine maintenance check and all systems are functioning properly.",
     createdAt: "03-11-2025",
   },
   {
@@ -69,6 +77,7 @@ const ticket = [
     priority: "high",
     status: "open",
     problem: "Pressure sensor malfunction",
+    details: "The pressure sensor is malfunctioning and needs to be replaced.",
     createdAt: "12-01-2025",
   },
   {
@@ -77,6 +86,7 @@ const ticket = [
     priority: "medium",
     status: "in-progress",
     problem: "Oil level low warning",
+    details: "The oil level is low and needs to be refilled.",
     createdAt: "11-01-2024",
   },
   {
@@ -85,6 +95,7 @@ const ticket = [
     priority: "high",
     status: "open",
     problem: "Overheating issue detected",
+    details: "The machine is overheating due to a possible coolant leak.",
     createdAt: "15-01-2024",
   },
   {
@@ -93,6 +104,7 @@ const ticket = [
     priority: "medium",
     status: "in-progress",
     problem: "Unusual vibration patterns",
+    details: "The machine is experiencing unusual vibrations that may indicate a mechanical issue.",
     createdAt: "14-01-2025",
   },
   {
@@ -101,6 +113,7 @@ const ticket = [
     priority: "low",
     status: "resolved",
     problem: "Routine maintenance check",
+    details: "The machine underwent a routine maintenance check and all systems are functioning properly.",
     createdAt: "13-09-2025",
   },
   {
@@ -109,6 +122,7 @@ const ticket = [
     priority: "high",
     status: "open",
     problem: "Pressure sensor malfunction",
+    details: "The pressure sensor is malfunctioning and needs to be replaced.",
     createdAt: "12-01-2025",
   },
   {
@@ -117,6 +131,7 @@ const ticket = [
     priority: "medium",
     status: "in-progress",
     problem: "Oil level low warning",
+    details: "The oil level is low and needs to be refilled.",
     createdAt: "11-10-2025",
   },
 ];

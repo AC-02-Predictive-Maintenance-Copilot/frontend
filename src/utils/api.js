@@ -1,4 +1,4 @@
-const BASE_URL = "https://notes-api.dicoding.dev/v1";
+const BASE_URL = "http://localhost:5000/api/v1";
 import ticket from "./data";
 function getAccessToken() {
   return localStorage.getItem("accessToken");
@@ -19,7 +19,7 @@ async function fetchWithToken(url, options = {}) {
 }
 
 async function login({ email, password }) {
-  const response = await fetch(`${BASE_URL}/login`, {
+  const response = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,40 +29,41 @@ async function login({ email, password }) {
 
   const responseJson = await response.json();
 
-  if (responseJson.status !== "success") {
-    return { error: true, data: null, message: responseJson.message };
+  if (!response.ok || responseJson.error) {
+    return { error: true, data: null, message: responseJson.message || "Login failed" };
   }
 
+  // Backend mengembalikan { message, data: { token, user } }
   return { error: false, data: responseJson.data };
 }
 
-async function register({ name, email, password }) {
-  const response = await fetch(`${BASE_URL}/register`, {
+async function register({ name, username, email, password }) {
+  const response = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ name, username, email, password }),
   });
 
   const responseJson = await response.json();
 
-  if (responseJson.status !== "success") {
-    return { error: true, message: responseJson.message };
-  }
-
-  return { error: false };
-}
-
-async function getUserLogged() {
-  const response = await fetchWithToken(`${BASE_URL}/users/me`);
-  const responseJson = await response.json();
-
-  if (responseJson.status !== "success") {
-    return { error: true, data: null };
+  if (!response.ok || responseJson.error) {
+    return { error: true, message: responseJson.message || "Registration failed" };
   }
 
   return { error: false, data: responseJson.data };
+}
+
+async function getUserLogged() {
+  const response = await fetchWithToken(`${BASE_URL}/auth/me`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return { error: true, data: null };
+  }
+
+  return { error: false, data: responseJson.data.user };
 }
 
 function removeAccessToken() {
