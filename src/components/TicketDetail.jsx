@@ -19,7 +19,7 @@ export function TicketDetailDialog({ ticket, open, onOpenChange }) {
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            Ticket Detail - #{ticket.id}
+            Ticket Detail - {ticket.id}
           </DialogTitle>
           <div className="flex gap-2 mt-2">
             <StatusBadge status={ticket.status} />
@@ -38,17 +38,23 @@ export function TicketDetailDialog({ ticket, open, onOpenChange }) {
           
           <div className="grid gap-2">
             <Label className="font-semibold">Description</Label>
-            <p className="text-sm">{ticket.description || ticket.details || "N/A"}</p>
+            <p className="text-sm">{ticket.problemDetail || "N/A"}</p>
           </div>
 
           <div className="grid gap-2">
             <Label className="font-semibold">Machine ID</Label>
-            <p className="text-sm font-mono">{ticket.machineId}</p>
+            <p className="text-sm font-mono">{ticket.machine?.productId}</p>
           </div>
 
           <div className="grid gap-2">
             <Label className="font-semibold">Created At</Label>
-            <p className="text-sm">{ticket.createdAt || "N/A"}</p>
+            <p className="text-sm">{ticket.createdAt ? new Date(ticket.createdAt).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            }) : "N/A"}</p>
           </div>
         </div>
 
@@ -56,7 +62,6 @@ export function TicketDetailDialog({ ticket, open, onOpenChange }) {
           <DialogClose asChild>
             <Button variant="outline">Close</Button>
           </DialogClose>
-          <Button>Update Status</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

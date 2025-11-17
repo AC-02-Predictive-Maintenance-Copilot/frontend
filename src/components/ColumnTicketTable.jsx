@@ -11,15 +11,18 @@ import {
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { StatusBadge, PriorityBadge } from "@/components/StatusBadge";
 
+// Funsi untuk sorting kolom yg dikirim
+const handleSort = (column) => {
+  const currentSort = column.getIsSorted();
+  column.toggleSorting(currentSort ? currentSort === "asc" : true);
+};
+
 const CreateColumns = (handleDeleteClick, handleViewDetails) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => handleSort(column)}>
           Ticket ID <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -29,16 +32,14 @@ const CreateColumns = (handleDeleteClick, handleViewDetails) => [
   {
     accessorKey: "machineId",
     header: "Machine ID",
-    cell: ({ row }) => <div>{row.getValue("machineId")}</div>,
+    cell: ({ row }) => <div>{row.original.machine?.productId}</div>,
   },
   {
     accessorKey: "priority",
+    enableSorting: true,
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => handleSort(column)}>
           Priority <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -48,20 +49,22 @@ const CreateColumns = (handleDeleteClick, handleViewDetails) => [
       return <PriorityBadge priority={priority} />;
     },
     sortingFn: (rowA, rowB) => {
-      const priorityOrder = { high: 3, medium: 2, low: 1 };
-      const priorityA = priorityOrder[rowA.getValue("priority")];
-      const priorityB = priorityOrder[rowB.getValue("priority")];
+      const priorityOrder = {
+        HIGH: 3,
+        MEDIUM: 2,
+        LOW: 1,
+      };
+      const priorityA = priorityOrder[rowA.getValue("priority")] || 0;
+      const priorityB = priorityOrder[rowB.getValue("priority")] || 0;
       return priorityA - priorityB;
     },
   },
   {
     accessorKey: "status",
+    enableSorting: true,
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => handleSort(column)}>
           Status
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -72,9 +75,13 @@ const CreateColumns = (handleDeleteClick, handleViewDetails) => [
       return <StatusBadge status={status} />;
     },
     sortingFn: (rowA, rowB) => {
-      const statusOrder = { open: 3, "in-progress": 2, resolved: 1 };
-      const statusA = statusOrder[rowA.getValue("status")];
-      const statusB = statusOrder[rowB.getValue("status")];
+      const statusOrder = {
+        OPEN: 3,
+        "IN-PROGRESS": 2,
+        RESOLVED: 1,
+      };
+      const statusA = statusOrder[rowA.getValue("status")] || 0;
+      const statusB = statusOrder[rowB.getValue("status")] || 0;
       return statusA - statusB;
     },
   },
@@ -87,18 +94,28 @@ const CreateColumns = (handleDeleteClick, handleViewDetails) => [
   },
   {
     accessorKey: "createdAt",
+    enableSorting: true,
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => handleSort(column)}>
           Created At
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("createdAt")}</div>,
+    cell: ({ row }) => {
+      const date = row.getValue("createdAt");
+      const formatted = date
+        ? new Date(date).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "N/A";
+      return <div>{formatted}</div>;
+    },
   },
   {
     id: "actions",
@@ -119,7 +136,9 @@ const CreateColumns = (handleDeleteClick, handleViewDetails) => [
             <DropdownMenuItem
               onClick={() => {
                 navigator.clipboard.writeText(ticket.id);
-                toast.success("Ticket ID copied to clipboard!", { duration: 3000 });
+                toast.success("Ticket ID copied to clipboard!", {
+                  duration: 3000,
+                });
               }}
             >
               Copy ticket ID
@@ -141,6 +160,6 @@ const CreateColumns = (handleDeleteClick, handleViewDetails) => [
       );
     },
   },
-  ];
+];
 
-  export default CreateColumns;
+export default CreateColumns;

@@ -25,6 +25,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   AlertCircle,
   CheckCircle2,
   Loader2,
@@ -32,7 +39,7 @@ import {
   Clock,
   Info,
 } from "lucide-react";
-import { createTicket } from "@/utils/api";
+import { createTicket, getMachines } from "@/utils/api";
 
 // Validasi data dengan Zod
 const formSchema = z.object({
@@ -84,6 +91,9 @@ const PRIORITY_OPTIONS = [
 const CreateTicket = ({ onTicketCreated }) => {
 // Inisialisasi form dengan react-hook-form dan zodResolver
 // Tidak perlu state management lagi karena sudah pake react-hook-form
+  const [machines, setMachines] = React.useState([]);
+  const [loadingMachines, setLoadingMachines] = React.useState(true);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -93,6 +103,27 @@ const CreateTicket = ({ onTicketCreated }) => {
       detail: "",
     },
   });
+
+  // Fetch machines saat component mount
+  React.useEffect(() => {
+    const fetchMachines = async () => {
+      setLoadingMachines(true);
+      try {
+        const { error, data } = await getMachines();
+        if (!error && data) {
+          setMachines(data);
+        } else {
+          toast.error("Failed to load machines");
+        }
+      } catch {
+        toast.error("Error loading machines");
+      } finally {
+        setLoadingMachines(false);
+      }
+    };
+
+    fetchMachines();
+  }, []);
 
   // Hitung persentase kelengkapan form buat progress bar ala2
   const formValues = form.watch();
@@ -192,12 +223,33 @@ const CreateTicket = ({ onTicketCreated }) => {
                     <FormLabel>
                       Machine ID <span className="text-destructive">*</span>
                     </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Input machine ID here"
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={loadingMachines}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={
+                              loadingMachines
+                                ? "Loading machines..."
+                                : "Select a machine"
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {machines.map((machine) => (
+                          <SelectItem
+                            key={machine.productId}
+                            value={machine.productId}
+                          >
+                            {machine.productId}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
