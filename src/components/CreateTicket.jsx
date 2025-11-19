@@ -39,7 +39,6 @@ import {
   Clock,
   Info,
 } from "lucide-react";
-import { createTicket, getMachines } from "@/utils/api";
 
 // Validasi data dengan Zod
 const formSchema = z.object({
@@ -88,11 +87,9 @@ const PRIORITY_OPTIONS = [
   },
 ];
 
-const CreateTicket = ({ onTicketCreated }) => {
-// Inisialisasi form dengan react-hook-form dan zodResolver
-// Tidak perlu state management lagi karena sudah pake react-hook-form
-  const [machines, setMachines] = React.useState([]);
-  const [loadingMachines, setLoadingMachines] = React.useState(true);
+const CreateTicket = ({ onCreateTicket, onTicketCreated, machines = [] }) => {
+  // Inisialisasi form dengan react-hook-form dan zodResolver
+  // Tidak perlu state management lagi karena sudah pake react-hook-form
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -103,27 +100,6 @@ const CreateTicket = ({ onTicketCreated }) => {
       detail: "",
     },
   });
-
-  // Fetch machines saat component mount
-  React.useEffect(() => {
-    const fetchMachines = async () => {
-      setLoadingMachines(true);
-      try {
-        const { error, data } = await getMachines();
-        if (!error && data) {
-          setMachines(data);
-        } else {
-          toast.error("Failed to load machines");
-        }
-      } catch {
-        toast.error("Error loading machines");
-      } finally {
-        setLoadingMachines(false);
-      }
-    };
-
-    fetchMachines();
-  }, []);
 
   // Hitung persentase kelengkapan form buat progress bar ala2
   const formValues = form.watch();
@@ -137,18 +113,14 @@ const CreateTicket = ({ onTicketCreated }) => {
   }, [formValues]);
 
   const onSubmit = async (values) => {
-    const promise = createTicket(values);
+    const promise = onCreateTicket(values);
 
     toast.promise(promise, {
       loading: "Creating ticket...",
-      success: (result) => {
+      success: () => {
         // Reset form setelah berhasil submit ticket
-        setTimeout(() => {
-          form.reset();
-          if (onTicketCreated && result?.data) {
-            onTicketCreated(result.data);
-          }
-        }, 1000);
+        form.reset();
+        onTicketCreated();
         return "Ticket created successfully! 🎉";
       },
       error: (err) => {
@@ -158,7 +130,6 @@ const CreateTicket = ({ onTicketCreated }) => {
 
     return promise;
   };
-
 
   return (
     <>
@@ -226,17 +197,10 @@ const CreateTicket = ({ onTicketCreated }) => {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      disabled={loadingMachines}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue
-                            placeholder={
-                              loadingMachines
-                                ? "Loading machines..."
-                                : "Select a machine"
-                            }
-                          />
+                          <SelectValue placeholder={"Select a machine"} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -276,9 +240,9 @@ const CreateTicket = ({ onTicketCreated }) => {
                               onClick={() => field.onChange(priority.value)}
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ 
+                              transition={{
                                 delay: index * 0.1,
-                                duration: 0.3 
+                                duration: 0.3,
                               }}
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
@@ -302,7 +266,9 @@ const CreateTicket = ({ onTicketCreated }) => {
                                 />
                                 <span
                                   className={`text-sm font-semibold ${
-                                    isSelected ? priority.color : "text-foreground"
+                                    isSelected
+                                      ? priority.color
+                                      : "text-foreground"
                                   }`}
                                 >
                                   {priority.label}
@@ -357,7 +323,9 @@ const CreateTicket = ({ onTicketCreated }) => {
                 <div className="flex gap-3">
                   <Button
                     type="submit"
-                    disabled={form.formState.isSubmitting || formCompletion < 100}
+                    disabled={
+                      form.formState.isSubmitting || formCompletion < 100
+                    }
                     className="flex-1"
                     size="lg"
                   >

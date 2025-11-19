@@ -4,7 +4,7 @@ import DataTableDemo from "@/components/TicketTable";
 import { TicketDetailDialog } from "@/components/TicketDetail";
 import HeaderText from "@/components/HeaderText";
 
-function TicketPage({ tickets, loading }) {
+function TicketPage({ tickets, loading, onDeleteTicket, machines=[], onEditTicket }) {
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [selectedTicket, setSelectedTicket] = React.useState(null);
 
@@ -31,7 +31,7 @@ function TicketPage({ tickets, loading }) {
           </div>
         )}
 
-        <DataTableDemo tickets={tickets} onViewDetails={handleViewDetails} />
+        <DataTableDemo tickets={tickets} onViewDetails={handleViewDetails} onDeleteTicket={onDeleteTicket} machines={machines} onEditTicket={onEditTicket} />
 
         {/* Ticket Detail Modal */}
         <TicketDetailDialog 

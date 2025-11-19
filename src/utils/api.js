@@ -1,5 +1,5 @@
 const BASE_URL = "http://localhost:5000/api/v1";
-import ticket from "./data";
+
 function getAccessToken() {
   return localStorage.getItem("accessToken");
 }
@@ -20,7 +20,7 @@ async function fetchWithToken(url, options = {}) {
 
 async function login({ email, password }) {
   const { toast } = await import("sonner");
-  
+
   const response = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
@@ -32,19 +32,26 @@ async function login({ email, password }) {
   const responseJson = await response.json();
 
   if (!response.ok || responseJson.error) {
-    return { error: true, data: null, message: responseJson.message || "Login failed" };
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Login failed",
+    };
   }
 
   // Backend mengembalikan { message, data: { token, user } }
-  toast.success(`Login successful! Welcome back 👋 ${responseJson.data.user.name}`, {
-    duration: 1500,
-  });
+  toast.success(
+    `Login successful! Welcome back 👋 ${responseJson.data.user.name}`,
+    {
+      duration: 1500,
+    }
+  );
   return { error: false, data: responseJson.data };
 }
 
 async function register({ name, username, email, password }) {
   const { toast } = await import("sonner");
-  
+
   const response = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
@@ -56,7 +63,10 @@ async function register({ name, username, email, password }) {
   const responseJson = await response.json();
 
   if (!response.ok || responseJson.error) {
-    return { error: true, message: responseJson.message || "Registration failed" };
+    return {
+      error: true,
+      message: responseJson.message || "Registration failed",
+    };
   }
 
   toast.success("Registration successful! Redirecting to login... 🎉", {
@@ -81,17 +91,115 @@ function removeAccessToken() {
   return localStorage.removeItem("accessToken");
 }
 
-async function getTickets() {
-  const data = ticket;
-  return { error: false, data };
+async function getTicketsByMachine(machineId) {
+  const response = await fetchWithToken(
+    `${BASE_URL}/machines/${machineId}/tickets`
+  );
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Failed to fetch tickets",
+    };
+  }
+
+  return { error: false, data: responseJson.data.tickets };
 }
 
+async function getTickets() {
+  // const data = ticket;
+  const response = await fetchWithToken(`${BASE_URL}/tickets`);
+  const responseJson = await response.json();
+  return { error: false, data: responseJson.data.tickets };
+  // return { error: false, data };
+}
+
+async function getMachines() {
+  const response = await fetchWithToken(`${BASE_URL}/machines`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Failed to fetch machines",
+    };
+  }
+
+  return { error: false, data: responseJson.data.machines };
+}
+
+// Untuk submit tiket baru
 async function createTicket(ticketData) {
-  console.log("Creating ticket:", ticketData);
+  const body = {
+    productId: ticketData.machine,
+    priority: ticketData.priority.toUpperCase(),
+    status: "OPEN",
+    problem: ticketData.problem,
+    problemDetail: ticketData.detail,
+    isPublished: true,
+  };
+
+  const response = await fetchWithToken(`${BASE_URL}/tickets`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to create ticket");
+  }
+
+  return { error: false, data: responseJson.data.ticket };
+}
+
+async function updateTicket(ticketId, ticketData) {
+  // Format data sesuai dengan struktur API
+  const body = {
+    productId: ticketData.machine,
+    priority: ticketData.priority.toUpperCase(),
+    problem: ticketData.problem,
+    problemDetail: ticketData.problemDetail,
+  };
+
+  const response = await fetchWithToken(`${BASE_URL}/tickets/${ticketId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to update ticket");
+  }
+
+  return { error: false, data: responseJson.data.ticket };
 }
 
 async function deleteTicket(ticketId) {
-  console.log("Deleting ticket with ID:", ticketId);
+  const response = await fetchWithToken(`${BASE_URL}/tickets/${ticketId}`, {
+    method: "DELETE",
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      message: responseJson.message || "Failed to delete ticket",
+    };
+  }
+
+  return { error: false, message: responseJson.message };
 }
 
 export {
@@ -102,6 +210,9 @@ export {
   register,
   getUserLogged,
   getTickets,
+  getMachines,
+  getTicketsByMachine,
   createTicket,
+  updateTicket,
   deleteTicket,
 };

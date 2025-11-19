@@ -8,13 +8,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {  ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -28,15 +27,22 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import ConfirmDialog from "./ConfirmDialog";
-import { deleteTicket } from "@/utils/api";
 import CreateColumns from "./ColumnTicketTable";
+import EditTicket from "./EditTicket";
 
-function DataTableDemo({ tickets = [], onViewDetails }) {
+function DataTableDemo({
+  tickets = [],
+  machines = [],
+  onViewDetails,
+  onDeleteTicket,
+  onEditTicket,
+}) {
   const data = React.useMemo(() => tickets || [], [tickets]);
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [selectedTicketId, setSelectedTicketId] = React.useState(null);
 
   const handleDeleteClick = (ticketId) => {
@@ -46,18 +52,44 @@ function DataTableDemo({ tickets = [], onViewDetails }) {
 
   const handleConfirmDelete = async () => {
     if (selectedTicketId) {
-      try {
-        await deleteTicket(selectedTicketId);
-        toast.success("Ticket deleted successfully!", { duration: 3000 });
-      } catch {
-        toast.error("Failed to delete ticket", { duration: 3000 });
-      }
+      toast.promise(onDeleteTicket(selectedTicketId), {
+        loading: "Deleting ticket...",
+        success: "Ticket deleted successfully! 🗑️",
+        error: (err) => {
+          err.message || "Failed to delete ticket";
+        },
+      });
+
+      setDeleteDialogOpen(false);
+      setSelectedTicketId(null);
     }
-    setDeleteDialogOpen(false);
-    setSelectedTicketId(null);
   };
 
-  const columns = CreateColumns(handleDeleteClick, onViewDetails);
+  const handleEditClick = (ticketId) => {
+    setSelectedTicketId(ticketId);
+    setEditDialogOpen(true);
+  };
+
+  const handleConfirmEdit = async (ticketId, updatedTicket) => {
+    if (ticketId) {
+      try {
+        await toast.promise(onEditTicket(ticketId, updatedTicket), {
+          loading: "Updating ticket...",
+          success: "Ticket updated successfully! ✏️",
+          error: (err) => err?.message || "Failed to update ticket",
+        });
+        setEditDialogOpen(false);
+        setSelectedTicketId(null);
+      } catch (error) {
+        console.error("Error updating ticket:", error);
+      }
+    }
+  };
+  const columns = CreateColumns(
+    handleDeleteClick,
+    onViewDetails,
+    handleEditClick
+  );
 
   const table = useReactTable({
     data,
@@ -86,6 +118,13 @@ function DataTableDemo({ tickets = [], onViewDetails }) {
         onConfirm={handleConfirmDelete}
         confirmText="Delete"
         cancelText="Cancel"
+      />
+      <EditTicket
+        ticket={tickets.find((t) => t.id === selectedTicketId)}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        machines={machines}
+        onEditTicket={handleConfirmEdit}
       />
       <div className="w-full">
         <div className="flex items-center py-4 gap-2">

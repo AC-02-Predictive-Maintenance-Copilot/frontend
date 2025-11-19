@@ -17,12 +17,15 @@ import OverviewPage from "./pages/OverviewPage";
 import { Routes, Route } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTickets } from "@/hooks/useTickets";
+import { useMachine } from "@/hooks/useMachine";
 import { Toaster } from "@/components/ui/sonner";
+import AddMachinePage from "./pages/AddMachine";
 
 function App() {
   // Custom hooks untuk auth dan tickets
   const auth = useAuth();
   const tickets = useTickets();
+  const machines = useMachine();
 
   React.useEffect(() => {
     const initApp = async () => {
@@ -37,18 +40,13 @@ function App() {
   React.useEffect(() => {
     if (auth.user) {
       tickets.fetchTickets();
+      machines.fetchMachines();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.user]);
 
   const handleSendChat = (chat) => {
     console.log("Chat sent:", chat);
-  };
-
-  const handleTicketCreated = (ticketData) => {
-    console.log("New ticket created:", ticketData);
-    // Refresh tickets list
-    tickets.fetchTickets();
   };
 
   if (auth.isLoading) {
@@ -59,7 +57,7 @@ function App() {
     );
   }
 
-// Page login dan regis jika belum login
+  // Page login dan regis jika belum login
   if (!auth.user) {
     return (
       <>
@@ -68,21 +66,30 @@ function App() {
           <Route
             path="/"
             element={
-              <LoginPage 
-                login={auth.login} 
-                error={auth.error} 
+              <LoginPage
+                login={auth.login}
+                error={auth.error}
                 clearError={auth.clearError}
                 isLoading={auth.isLoading}
               />
             }
           />
-          <Route path="/register" element={<RegisterPage register={auth.register} error={auth.error} clearError={auth.clearError} />} />
+          <Route
+            path="/register"
+            element={
+              <RegisterPage
+                register={auth.register}
+                error={auth.error}
+                clearError={auth.clearError}
+              />
+            }
+          />
           <Route
             path="*"
             element={
-              <LoginPage 
-                login={auth.login} 
-                error={auth.error} 
+              <LoginPage
+                login={auth.login}
+                error={auth.error}
                 clearError={auth.clearError}
                 isLoading={auth.isLoading}
               />
@@ -93,7 +100,7 @@ function App() {
     );
   }
 
-// Main app di sini
+  // Main app di sini
   return (
     <UserProvider>
       <ThemeProvider>
@@ -112,16 +119,22 @@ function App() {
                     path="/tickets/view"
                     element={
                       <TicketPage
+                        machines={machines.machines}
                         tickets={tickets.tickets}
                         loading={tickets.loading}
+                        onDeleteTicket={tickets.useDeleteTicket}
+                        onEditTicket={tickets.useEditTicket}
                       />
                     }
                   />
+                  <Route path="/machines/add" element={<AddMachinePage />} />
                   <Route
                     path="/tickets/create"
                     element={
                       <CreateTicketPage
-                        onTicketCreated={handleTicketCreated}
+                        machines={machines.machines}
+                        onCreateTicket={tickets.useCreateTicket}
+                        onTicketCreated={() => tickets.fetchTickets()}
                       />
                     }
                   />
@@ -131,18 +144,8 @@ function App() {
                       <ChatPage onSendChat={handleSendChat} user={auth.user} />
                     }
                   />
-                  <Route
-                    path="/overview"
-                    element={
-                      <OverviewPage />
-                    }
-                  />
-                  <Route
-                    path="/"
-                    element={
-                      <OverviewPage />
-                    }
-                  />
+                  <Route path="/overview" element={<OverviewPage />} />
+                  <Route path="/" element={<OverviewPage />} />
                 </Routes>
               </main>
             </SidebarInset>

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import CreateTicket from "@/components/CreateTicket";
 import HeaderText from "@/components/HeaderText";
 
-function CreateTicketPage({ onTicketCreated }) {
+function CreateTicketPage({ machines = [], onCreateTicket, onTicketCreated }) {
   return (
     <motion.div 
       className="flex-1 w-full p-6"
@@ -16,7 +16,7 @@ function CreateTicketPage({ onTicketCreated }) {
           title="Create New Ticket"
           subtitle="Submit a maintenance request or report an issue"
         />
-      <CreateTicket onTicketCreated={onTicketCreated} />
+      <CreateTicket onCreateTicket={onCreateTicket} onTicketCreated={onTicketCreated} machines={machines} />
       </div>
     </motion.div>
   );

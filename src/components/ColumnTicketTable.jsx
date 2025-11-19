@@ -17,7 +17,7 @@ const handleSort = (column) => {
   column.toggleSorting(currentSort ? currentSort === "asc" : true);
 };
 
-const CreateColumns = (handleDeleteClick, handleViewDetails) => [
+const CreateColumns = (handleDeleteClick, handleViewDetails, handleEditClick) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -33,6 +33,9 @@ const CreateColumns = (handleDeleteClick, handleViewDetails) => [
     accessorKey: "machineId",
     header: "Machine ID",
     cell: ({ row }) => <div>{row.original.machine?.productId}</div>,
+    filterFn: (row, value) => {
+      return row.original.machine?.productId?.toLowerCase().includes(value.toLowerCase());
+    },
   },
   {
     accessorKey: "priority",
@@ -147,7 +150,7 @@ const CreateColumns = (handleDeleteClick, handleViewDetails) => [
             <DropdownMenuItem onClick={() => handleViewDetails(ticket)}>
               View details
             </DropdownMenuItem>
-            <DropdownMenuItem>Edit ticket</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleEditClick(ticket.id)}>Edit ticket</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600"
