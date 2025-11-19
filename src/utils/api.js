@@ -38,8 +38,6 @@ async function login({ email, password }) {
 }
 
 async function register({ name, username, email, password }) {
-  const { toast } = await import("sonner");
-
   const response = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
@@ -50,16 +48,10 @@ async function register({ name, username, email, password }) {
 
   const responseJson = await response.json();
 
-  if (!response.ok || responseJson.error) {
-    return {
-      error: true,
-      message: responseJson.message || "Registration failed",
-    };
+  // Check jika response tidak OK atau ada error dari backend
+  if (!response.ok) {
+    throw new Error(responseJson.message || "Registration failed");
   }
-
-  toast.success("Registration successful! Redirecting to login... 🎉", {
-    duration: 1500,
-  });
 
   return { error: false, data: responseJson.data };
 }

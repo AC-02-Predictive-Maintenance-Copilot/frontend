@@ -77,8 +77,6 @@ function App() {
             element={
               <RegisterPage
                 register={auth.register}
-                error={auth.error}
-                clearError={auth.clearError}
               />
             }
           />

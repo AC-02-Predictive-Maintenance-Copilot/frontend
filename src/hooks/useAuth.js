@@ -74,22 +74,18 @@ export function useAuth() {
   const register = useCallback(async (name, username, email, password) => {
     setError(null);
     try {
-      const { error: registerError, message } = await registerAPI({
+      const { data } = await registerAPI({
         name,
         username,
         email,
         password,
       });
-      if (registerError) {
-        setError(message || "Registration failed");
-        return { success: false };
-      }
-
+      
       setError(null);
-      return { success: true };
+      return data; // Return data untuk toast success
     } catch (err) {
       setError(err.message || "An unexpected error occurred");
-      return { success: false };
+      throw err; // Re-throw error agar toast.promise bisa menangkap
     }
   }, []);
 
