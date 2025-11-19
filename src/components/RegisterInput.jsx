@@ -14,25 +14,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import AlertPopup from "@/components/AlertPopup";
+import { toast } from "sonner";
 
-const RegisterInput = ({ register, error, clearError }) => {
+const RegisterInput = ({ register }) => {
   const [name, setName] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [alertOpen, setAlertOpen] = React.useState(false);
 
   const [nameError, setNameError] = React.useState("");
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    if (error) {
-      setAlertOpen(true);
-    }
-  }, [error]);
 
   const validateName = (value) => {
     // Regex untuk hanya mengizinkan huruf (a-z, A-Z) dan spasi
@@ -77,57 +70,46 @@ const RegisterInput = ({ register, error, clearError }) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const showAlert = (onClose) => {
-    setAlertOpen(true);
-    if (onClose) {
-      setTimeout(() => onClose(), 100);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validasi nama sebelum submit
     if (!validateName(name)) {
-      showAlert("Validation Error", nameError || "Please enter a valid name.");
+      toast.error(nameError || "Please enter a valid name.");
       return;
     }
 
     if (name.trim().length === 0) {
-      showAlert("Validation Error", "Name is required.");
+      toast.error("Name is required.");
       return;
     }
 
     setIsLoading(true);
 
-    try {
-      const result = await register(name.trim(), username.trim(), email, password);
+    // Kita definisikan register terlebih dahulu lalu panggil dengan toast.promise
+    const registerPromise = register(name.trim(), username.trim(), email, password);
+    
+    toast.promise(registerPromise, {
+      loading: "Creating account...",
+      success: "Registration successful! Redirecting to login... 🎉",
+      error: (err) => err?.message || "Registration failed",
+    });
 
-      if (result?.success) {
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
-      }
+    // Di sini kita await hasil promise jika succes baru navigate
+    try {
+      await registerPromise;
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } catch (err) {
       console.error("Registration error:", err);
     } finally {
       setIsLoading(false);
     }
   };
-  const handleAlertClose = (open) => {
-    setAlertOpen(open);
-    if (!open && error) {
-      clearError();
-    }
-  };
+
   return (
-    <>
-      <AlertPopup
-        open={alertOpen}
-        onOpenChange={handleAlertClose}
-        title="Registration Failed"
-        description={error}
-      />
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -230,7 +212,6 @@ const RegisterInput = ({ register, error, clearError }) => {
         </CardFooter>
       </Card>
       </motion.div>
-    </>
   );
 };
 
