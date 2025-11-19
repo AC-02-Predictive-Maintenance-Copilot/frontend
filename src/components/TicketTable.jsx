@@ -114,7 +114,7 @@ function DataTableDemo({
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title="Delete Confirmation"
-        description="Are you sure you want to delete this ticket? This action cannot be undone."
+        description={`Are you sure you want to delete ticket with ID ${selectedTicketId}? This action cannot be undone.`}
         onConfirm={handleConfirmDelete}
         confirmText="Delete"
         cancelText="Cancel"
