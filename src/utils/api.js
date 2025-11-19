@@ -19,8 +19,6 @@ async function fetchWithToken(url, options = {}) {
 }
 
 async function login({ email, password }) {
-  const { toast } = await import("sonner");
-
   const response = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
@@ -32,20 +30,10 @@ async function login({ email, password }) {
   const responseJson = await response.json();
 
   if (!response.ok || responseJson.error) {
-    return {
-      error: true,
-      data: null,
-      message: responseJson.message || "Login failed",
-    };
+    throw new Error(responseJson.message || "Login failed");
   }
 
   // Backend mengembalikan { message, data: { token, user } }
-  toast.success(
-    `Login successful! Welcome back 👋 ${responseJson.data.user.name}`,
-    {
-      duration: 1500,
-    }
-  );
   return { error: false, data: responseJson.data };
 }
 

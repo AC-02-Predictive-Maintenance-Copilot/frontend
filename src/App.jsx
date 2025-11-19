@@ -68,8 +68,6 @@ function App() {
             element={
               <LoginPage
                 login={auth.login}
-                error={auth.error}
-                clearError={auth.clearError}
                 isLoading={auth.isLoading}
               />
             }
@@ -89,8 +87,6 @@ function App() {
             element={
               <LoginPage
                 login={auth.login}
-                error={auth.error}
-                clearError={auth.clearError}
                 isLoading={auth.isLoading}
               />
             }

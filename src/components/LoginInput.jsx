@@ -14,19 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import AlertPopup from "@/components/AlertPopup";
+import { toast } from "sonner";
 
-function LoginInput({ login, error, clearError, isLoading }) {
+function LoginInput({ login, isLoading }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
-  const [alertOpen, setAlertOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    if (error) {
-      setAlertOpen(true);
-    }
-  }, [error]);
 
   const onEmailChange = (event) => {
     setEmail(event.target.value);
@@ -40,26 +33,17 @@ function LoginInput({ login, error, clearError, isLoading }) {
     setShowPassword(!showPassword);
   };
 
-  const handleAlertClose = (open) => {
-    setAlertOpen(open);
-    if (!open && error) {
-      clearError();
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(email, password);
+    toast.promise(login(email, password), {
+      loading: "Logging in...",
+      success: (user) => `Welcome back, ${user.name}! 👋`,
+      error: (err) => err?.message || "Login failed",
+    });
   };
 
   return (
     <>
-      <AlertPopup
-        open={alertOpen}
-        onOpenChange={handleAlertClose}
-        title="Login Failed"
-        description={error}
-      />
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}

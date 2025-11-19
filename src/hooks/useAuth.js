@@ -41,28 +41,20 @@ export function useAuth() {
     setError(null);
 
     try {
-      const {
-        error: loginError,
-        data,
-        message,
-      } = await loginAPI({ email, password });
-
-      if (loginError) {
-        setError(message || "Login failed");
-        return;
-      }
+      const { data } = await loginAPI({ email, password });
 
       // Simpan token ke local storage (backend mengembalikan data.token)
       putAccessToken(data.token);
 
-      // Delay sebelum setUser agar toast notification sempat ditampilkan
-      // Backend sudah mengembalikan data.user langsung
-      setTimeout(() => {
-        setUser(data.user);
-        setError(null);
-      }, 1500);
+      // Set user langsung
+      setUser(data.user);
+      setError(null);
+      
+      // Return data untuk toast success message
+      return data.user;
     } catch (err) {
       setError(err.message || "An unexpected error occurred");
+      throw err; // Re-throw error agar toast.promise bisa menangkap
     }
   }, []);
 
