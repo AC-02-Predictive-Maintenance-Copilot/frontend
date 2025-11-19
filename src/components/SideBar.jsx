@@ -40,12 +40,12 @@ const collapsibleMenuItems = [
     subItems: [
       {
         title: "View Machine",
-        url: "#view",
+        url: "/machines/view",
         icon: Eye,
       },
       {
         title: "Add Machine",
-        url: "#add",
+        url: "/machines/add",
         icon: Plus,
       },
     ],

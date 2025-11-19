@@ -133,7 +133,7 @@ const CreateTicket = ({ onCreateTicket, onTicketCreated, machines = [] }) => {
 
   return (
     <>
-      <Card className="border-border">
+      <Card className="w-full">
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">

@@ -118,7 +118,7 @@ function EditTicket({ ticket, open, onOpenChange, machines = [], onEditTicket })
                 done.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4">
+            <div className="grid gap-4 my-5">
               <FormField
               control={form.control}
               name="problem"

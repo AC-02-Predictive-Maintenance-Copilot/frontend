@@ -1,4 +1,4 @@
-import { getMachines } from "@/utils/api";
+import { getMachines, addMachine } from "@/utils/api";
 import { useCallback, useState } from "react";
 
 export function useMachine() {
@@ -12,7 +12,7 @@ export function useMachine() {
 
     try {
       const { error, data } = await getMachines();
-      if(!error) {
+      if (!error) {
         setMachines(data);
       } else {
         setError("Failed to fetch machines");
@@ -25,12 +25,28 @@ export function useMachine() {
     }
   }, []);
 
+  const useAddMachine = useCallback(async (newMachine) => {
+    try {
+      const { error, data } = await addMachine(newMachine);
+      if (!error) {
+        setMachines((prevMachines) => [data, ...prevMachines]);
+        return data;
+      } else {
+        throw new Error("Failed to add machine");
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error("Error adding machine:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     machines,
     loading,
     error,
     fetchMachines,
+    useAddMachine,
   };
 }
-
-

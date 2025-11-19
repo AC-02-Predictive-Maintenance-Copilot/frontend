@@ -182,6 +182,28 @@ async function deleteTicket(ticketId) {
   return { error: false, message: responseJson.message };
 }
 
+async function addMachine(machineData) {
+  const body = {
+    name: machineData.name,
+    productId: machineData.productId,
+  };
+  const response = await fetchWithToken(`${BASE_URL}/machines`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to add machine");
+  }
+  
+  return { error: false, data: responseJson.data.machine };
+}
+
 export {
   getAccessToken,
   putAccessToken,
@@ -195,4 +217,5 @@ export {
   createTicket,
   updateTicket,
   deleteTicket,
+  addMachine,
 };

@@ -19,7 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTickets } from "@/hooks/useTickets";
 import { useMachine } from "@/hooks/useMachine";
 import { Toaster } from "@/components/ui/sonner";
-import AddMachinePage from "./pages/AddMachine";
+import AddMachinePage from "./pages/AddMachinePage";
 
 function App() {
   // Custom hooks untuk auth dan tickets
@@ -66,27 +66,17 @@ function App() {
           <Route
             path="/"
             element={
-              <LoginPage
-                login={auth.login}
-                isLoading={auth.isLoading}
-              />
+              <LoginPage login={auth.login} isLoading={auth.isLoading} />
             }
           />
           <Route
             path="/register"
-            element={
-              <RegisterPage
-                register={auth.register}
-              />
-            }
+            element={<RegisterPage register={auth.register} />}
           />
           <Route
             path="*"
             element={
-              <LoginPage
-                login={auth.login}
-                isLoading={auth.isLoading}
-              />
+              <LoginPage login={auth.login} isLoading={auth.isLoading} />
             }
           />
         </Routes>
@@ -121,7 +111,15 @@ function App() {
                       />
                     }
                   />
-                  <Route path="/machines/add" element={<AddMachinePage />} />
+                  <Route
+                    path="/machines/add"
+                    element={
+                      <AddMachinePage
+                        onAddMachine={machines.useAddMachine}
+                        onMachineAdded={() => machines.fetchMachines()}
+                      />
+                    }
+                  />
                   <Route
                     path="/tickets/create"
                     element={

@@ -73,7 +73,7 @@ function DataTableDemo({
   const handleConfirmEdit = async (ticketId, updatedTicket) => {
     if (ticketId) {
       try {
-        await toast.promise(onEditTicket(ticketId, updatedTicket), {
+        toast.promise(onEditTicket(ticketId, updatedTicket), {
           loading: "Updating ticket...",
           success: "Ticket updated successfully! ✏️",
           error: (err) => err?.message || "Failed to update ticket",
