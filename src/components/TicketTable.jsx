@@ -38,7 +38,7 @@ function DataTableDemo({
   onEditTicket,
 }) {
   const data = React.useMemo(() => tickets || [], [tickets]);
-  const [sorting, setSorting] = React.useState([]);
+  const [sorting, setSorting] = React.useState([{ id: "id", desc: true }]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
