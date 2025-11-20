@@ -3,7 +3,7 @@ export function StatusBadge({ status }) {
   const StatusColor = (status) => {
     const statusMap = {
       open: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-950",
-      "in-progress":
+      "in_progress":
         "text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-950",
       resolved:
         "text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-950",
@@ -17,7 +17,7 @@ export function StatusBadge({ status }) {
         status
       )}`}
     >
-      {status?.replace("-", " ")}
+      {status?.replace("_", " ")}
     </div>
   );
 }

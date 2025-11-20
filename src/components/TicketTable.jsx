@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import ConfirmDialog from "./ConfirmDialog";
 import CreateColumns from "./ColumnTicketTable";
 import EditTicket from "./EditTicket";
+import UpdateStatusDialog from "./UpdateStatusDialog";
 
 function DataTableDemo({
   tickets = [],
@@ -43,7 +44,9 @@ function DataTableDemo({
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+  const [updateStatusDialogOpen, setUpdateStatusDialogOpen] = React.useState(false);
   const [selectedTicketId, setSelectedTicketId] = React.useState(null);
+  const [selectedTicket, setSelectedTicket] = React.useState(null);
 
   const handleDeleteClick = (ticketId) => {
     setSelectedTicketId(ticketId);
@@ -85,10 +88,42 @@ function DataTableDemo({
       }
     }
   };
+
+  const handleUpdateStatusClick = (ticket) => {
+    setSelectedTicket(ticket);
+    setUpdateStatusDialogOpen(true);
+  };
+
+  const handleConfirmUpdateStatus = async (ticketId, newStatus) => {
+    if (ticketId && newStatus) {
+      try {
+        // Sesuaikan data dengan body API
+        const ticketData = {
+          productId: selectedTicket.machine?.productId || selectedTicket.productId,
+          priority: selectedTicket.priority,
+          status: newStatus,
+          problem: selectedTicket.problem,
+          problemDetail: selectedTicket.problemDetail,
+        };
+        
+        toast.promise(onEditTicket(ticketId, ticketData), {
+          loading: "Updating ticket status...",
+          success: "Ticket status updated successfully! ✅",
+          error: (err) => err?.message || "Failed to update ticket status",
+        });
+        setUpdateStatusDialogOpen(false);
+        setSelectedTicket(null);
+      } catch (error) {
+        console.error("Error updating ticket status:", error);
+      }
+    }
+  };
+
   const columns = CreateColumns(
     handleDeleteClick,
     onViewDetails,
-    handleEditClick
+    handleEditClick,
+    handleUpdateStatusClick
   );
 
   const table = useReactTable({
@@ -125,6 +160,12 @@ function DataTableDemo({
         onOpenChange={setEditDialogOpen}
         machines={machines}
         onEditTicket={handleConfirmEdit}
+      />
+      <UpdateStatusDialog
+        ticket={selectedTicket}
+        open={updateStatusDialogOpen}
+        onOpenChange={setUpdateStatusDialogOpen}
+        onConfirm={handleConfirmUpdateStatus}
       />
       <div className="w-full">
         <div className="flex items-center py-4 gap-2">

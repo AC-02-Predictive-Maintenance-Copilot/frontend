@@ -17,7 +17,7 @@ const handleSort = (column) => {
   column.toggleSorting(currentSort ? currentSort === "asc" : true);
 };
 
-const CreateColumns = (handleDeleteClick, handleViewDetails, handleEditClick) => [
+const CreateColumns = (handleDeleteClick, handleViewDetails, handleEditClick, handleUpdateStatusClick) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -80,7 +80,7 @@ const CreateColumns = (handleDeleteClick, handleViewDetails, handleEditClick) =>
     sortingFn: (rowA, rowB) => {
       const statusOrder = {
         OPEN: 3,
-        "IN-PROGRESS": 2,
+        IN_PROGRESS: 2,
         RESOLVED: 1,
       };
       const statusA = statusOrder[rowA.getValue("status")] || 0;
@@ -149,6 +149,9 @@ const CreateColumns = (handleDeleteClick, handleViewDetails, handleEditClick) =>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => handleViewDetails(ticket)}>
               View details
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleUpdateStatusClick(ticket)}>
+              Update status
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleEditClick(ticket.id)}>Edit ticket</DropdownMenuItem>
             <DropdownMenuSeparator />

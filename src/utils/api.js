@@ -140,20 +140,12 @@ async function createTicket(ticketData) {
 }
 
 async function updateTicket(ticketId, ticketData) {
-  // Format data sesuai dengan struktur API
-  const body = {
-    productId: ticketData.machine,
-    priority: ticketData.priority.toUpperCase(),
-    problem: ticketData.problem,
-    problemDetail: ticketData.problemDetail,
-  };
-
   const response = await fetchWithToken(`${BASE_URL}/tickets/${ticketId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(ticketData),
   });
 
   const responseJson = await response.json();

@@ -99,7 +99,14 @@ function EditTicket({ ticket, open, onOpenChange, machines = [], onEditTicket })
 
   const handleEditTicket = async (data) => {
     try {
-      await onEditTicket(ticket.id, data);
+      // Format data sesuai API structure
+      const ticketData = {
+        productId: data.machine,
+        priority: data.priority,
+        problem: data.problem,
+        problemDetail: data.problemDetail,
+      };
+      await onEditTicket(ticket.id, ticketData);
       onOpenChange(false);  
     } catch (error) {
       console.error("Error editing ticket:", error);
