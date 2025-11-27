@@ -20,6 +20,7 @@ import { useTickets } from "@/hooks/useTickets";
 import { useMachine } from "@/hooks/useMachine";
 import { Toaster } from "@/components/ui/sonner";
 import AddMachinePage from "./pages/AddMachinePage";
+import ViewMachinePage from "./pages/ViewMachinePage";
 
 function App() {
   // Custom hooks untuk auth dan tickets
@@ -119,6 +120,10 @@ function App() {
                         onMachineAdded={() => machines.fetchMachines()}
                       />
                     }
+                  />
+                  <Route
+                    path="/machines/view"
+                    element={<ViewMachinePage machines={machines.machines} />}
                   />
                   <Route
                     path="/tickets/create"

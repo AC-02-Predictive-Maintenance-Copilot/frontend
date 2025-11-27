@@ -16,6 +16,7 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import { NavUser } from "./AvatarProfile";
 import SidebarMenuSimple from "@/components/SidebarMenuSimple";
 import SidebarMenuCollapsible from "@/components/SidebarMenuCollapsible";
+import { motion } from "framer-motion";
 
 // Menu items
 const simpleMenuItems = [
@@ -93,16 +94,25 @@ function SideBar({ onLogout, user }) {
       />
       <Sidebar collapsible="icon">
         <SidebarHeader className="h-16 border-sidebar-border flex items-center px-4 group-data-[collapsible=icon]:px-0">
-          <div className="flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center">
-            <div className="flex h-10 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <motion.div 
+            className="flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div 
+              className="flex h-10 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            >
               <Bot className="h-5 w-5" />
-            </div>
+            </motion.div>
             <div className="flex flex-col overflow-hidden group-data-[collapsible=icon]:hidden">
               <span className="font-semibold text-sm truncate">
                 Maintenance Copilot
               </span>
             </div>
-          </div>
+          </motion.div>
         </SidebarHeader>
 
         <SidebarContent>
