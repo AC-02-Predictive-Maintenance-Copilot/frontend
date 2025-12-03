@@ -230,6 +230,90 @@ async function editMachine(machineId, machineData) {
   return { error: false, data: responseJson.data.machine };
 }
 
+// Machine Status API Functions
+async function getMachineStatuses() {
+  const response = await fetchWithToken(`${BASE_URL}/machine/status`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Failed to fetch machine statuses",
+    };
+  }
+
+  return { error: false, data: responseJson.data };
+}
+
+async function getMachineStatusByMachineId(machineId) {
+  const response = await fetchWithToken(`${BASE_URL}/machine/status/${machineId}`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Failed to fetch machine status",
+    };
+  }
+
+  return { error: false, data: responseJson.data };
+}
+
+async function createMachineStatus(statusData) {
+  const response = await fetchWithToken(`${BASE_URL}/machine/status`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(statusData),
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to create machine status");
+  }
+
+  return { error: false, message: responseJson.message };
+}
+
+async function updateMachineStatus(statusId, statusData) {
+  const response = await fetchWithToken(`${BASE_URL}/machine/status/${statusId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(statusData),
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to update machine status");
+  }
+
+  return { error: false, message: responseJson.message, data: responseJson.data };
+}
+
+async function deleteMachineStatus(statusId) {
+  const response = await fetchWithToken(`${BASE_URL}/machine/status/${statusId}`, {
+    method: "DELETE",
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      message: responseJson.message || "Failed to delete machine status",
+    };
+  }
+
+  return { error: false, message: responseJson.message };
+}
+
 export {
   getAccessToken,
   putAccessToken,
@@ -246,4 +330,9 @@ export {
   addMachine,
   deleteMachine,
   editMachine,
+  getMachineStatuses,
+  getMachineStatusByMachineId,
+  createMachineStatus,
+  updateMachineStatus,
+  deleteMachineStatus,
 };

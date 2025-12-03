@@ -18,15 +18,18 @@ import { Routes, Route } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTickets } from "@/hooks/useTickets";
 import { useMachine } from "@/hooks/useMachine";
+import { useStatus } from "./hooks/useStatus";
 import { Toaster } from "@/components/ui/sonner";
 import AddMachinePage from "./pages/AddMachinePage";
 import ViewMachinePage from "./pages/ViewMachinePage";
+import AddMachineStatus from "./pages/AddMachineStatusPage";
 
 function App() {
   // Custom hooks untuk auth dan tickets
   const auth = useAuth();
   const tickets = useTickets();
   const machines = useMachine();
+  const status = useStatus();
 
   React.useEffect(() => {
     const initApp = async () => {
@@ -124,10 +127,20 @@ function App() {
                   <Route
                     path="/machines/view"
                     element={
-                      <ViewMachinePage 
+                      <ViewMachinePage
                         machines={machines.machines}
                         onDeleteMachine={machines.useDeleteMachine}
                         onEditMachine={machines.useEditMachine}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/machines/status/add"
+                    element={
+                      <AddMachineStatus
+                        onCreateStatus={status.useCreateStatus}
+                        machines={machines.machines}
+                        onStatusAdded={() => status.fetchStatuses()}
                       />
                     }
                   />

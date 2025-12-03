@@ -1,5 +1,5 @@
 import React from "react";
-import { Brain, Bot, Cog, Eye, Plus, Monitor, Ticket } from "lucide-react";
+import { Brain, Bot, Cog, Eye, Plus, Monitor, Ticket, ChartArea } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -48,6 +48,11 @@ const collapsibleMenuItems = [
         title: "Add Machine",
         url: "/machines/add",
         icon: Plus,
+      },
+      {
+        title: "Add Machine Status",
+        url: "/machines/status/add",
+        icon: ChartArea,
       },
     ],
   },
