@@ -96,21 +96,6 @@ async function getTickets() {
   // return { error: false, data };
 }
 
-async function getMachines() {
-  const response = await fetchWithToken(`${BASE_URL}/machines`);
-  const responseJson = await response.json();
-
-  if (!response.ok || responseJson.error) {
-    return {
-      error: true,
-      data: null,
-      message: responseJson.message || "Failed to fetch machines",
-    };
-  }
-
-  return { error: false, data: responseJson.data.machines };
-}
-
 // Untuk submit tiket baru
 async function createTicket(ticketData) {
   const body = {
@@ -174,6 +159,21 @@ async function deleteTicket(ticketId) {
   return { error: false, message: responseJson.message };
 }
 
+async function getMachines() {
+  const response = await fetchWithToken(`${BASE_URL}/machines`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Failed to fetch machines",
+    };
+  }
+
+  return { error: false, data: responseJson.data.machines };
+}
+
 async function addMachine(machineData) {
   const body = {
     name: machineData.name,
@@ -192,7 +192,41 @@ async function addMachine(machineData) {
   if (!response.ok || responseJson.error) {
     throw new Error(responseJson.message || "Failed to add machine");
   }
-  
+
+  return { error: false, data: responseJson.data.machine };
+}
+
+async function deleteMachine(machineId) {
+  const response = await fetchWithToken(`${BASE_URL}/machines/${machineId}`, {
+    method: "DELETE",
+  });
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      message: responseJson.message || "Failed to delete ticket",
+    };
+  }
+
+  return { error: false, message: responseJson.message };
+}
+
+async function editMachine(machineId, machineData) {
+  const response = await fetchWithToken(`${BASE_URL}/machines/${machineId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(machineData),
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to edit machine");
+  }
+
   return { error: false, data: responseJson.data.machine };
 }
 
@@ -204,10 +238,12 @@ export {
   register,
   getUserLogged,
   getTickets,
-  getMachines,
   getTicketsByMachine,
   createTicket,
   updateTicket,
   deleteTicket,
+  getMachines,
   addMachine,
+  deleteMachine,
+  editMachine,
 };

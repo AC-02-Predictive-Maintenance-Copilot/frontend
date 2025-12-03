@@ -11,7 +11,7 @@ import { Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import { machineCardVariants } from "./MotionVariant";
 
-function MachineCard({ machine }) {
+function MachineCard({ machine, onCardClick }) {
   const [isHovered, setIsHovered] = React.useState(false);
 
   return (
@@ -21,6 +21,7 @@ function MachineCard({ machine }) {
       whileTap="tap"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => onCardClick(machine)}
     >
       <Card className="cursor-pointer border-2 hover:border-primary/50 h-full">
         <CardHeader className="space-y-3">

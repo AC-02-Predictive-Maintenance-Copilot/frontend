@@ -123,7 +123,13 @@ function App() {
                   />
                   <Route
                     path="/machines/view"
-                    element={<ViewMachinePage machines={machines.machines} />}
+                    element={
+                      <ViewMachinePage 
+                        machines={machines.machines}
+                        onDeleteMachine={machines.useDeleteMachine}
+                        onEditMachine={machines.useEditMachine}
+                      />
+                    }
                   />
                   <Route
                     path="/tickets/create"

@@ -1,4 +1,4 @@
-import { getMachines, addMachine } from "@/utils/api";
+import { getMachines, addMachine, deleteMachine, editMachine } from "@/utils/api";
 import { useCallback, useState } from "react";
 
 export function useMachine() {
@@ -42,11 +42,51 @@ export function useMachine() {
     }
   }, []);
 
+  const useDeleteMachine = useCallback(async (machineId) => {
+    try {
+      const { error } = await deleteMachine(machineId);
+      if (!error) {
+        setMachines((prevMachines) =>
+          prevMachines.filter((machine) => machine.id !== machineId)
+        );
+        return true;
+      } else {
+        throw new Error("Failed to delete machine");
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error("Error deleting machine:", err);
+      throw err;
+    }
+  }, []);
+
+  const useEditMachine = useCallback(async (machineId, machineData) => {
+    try {
+      const { error, data } = await editMachine(machineId, machineData);
+      if (!error) {
+        setMachines((prevMachines) =>
+          prevMachines.map((machine) =>
+            machine.id === machineId ? data : machine
+          )
+        );
+        return data;
+      } else {
+        throw new Error("Failed to edit machine");
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error("Error editing machine:", err);
+      throw err;
+    }
+  }, []);
+
   return {
     machines,
     loading,
     error,
     fetchMachines,
     useAddMachine,
+    useDeleteMachine,
+    useEditMachine,
   };
 }

@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import MachineCard from "@/components/MachineCard";
+import MachineDetailDialog from "@/components/MachineDetailDialog";
 import HeaderText from "@/components/HeaderText";
 import { Input } from "@/components/ui/input";
 import { Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { machineContainerVariants, emptyStateVariants } from "@/components/MotionVariant";
+import { toast } from "sonner";
 
-function ViewMachinePage({ machines = [] }) {
+function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedMachine, setSelectedMachine] = useState(null);
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 
   // Filter machines based on search query
   const filteredMachines = machines.filter((machine) => {
@@ -20,6 +24,37 @@ function ViewMachinePage({ machines = [] }) {
       machine.productId?.toString().toLowerCase().includes(searchLower)
     );
   });
+
+  const handleCardClick = (machine) => {
+    setSelectedMachine(machine);
+    setDetailDialogOpen(true);
+  };
+
+  const handleDeleteMachine = async (machineId) => {
+    if (onDeleteMachine) {
+      toast.promise(onDeleteMachine(machineId), {
+        loading: "Deleting machine...",
+        success: "Machine deleted successfully! 🗑️",
+        error: (err) => {
+          return err?.message || "Failed to delete machine";
+        },
+      });
+      setDetailDialogOpen(false);
+    }
+  };
+
+  const handleEditMachine = async (machineId, machineData) => {
+    if (onEditMachine) {
+      toast.promise(onEditMachine(machineId, machineData), {
+        loading: "Updating machine...",
+        success: "Machine updated successfully! ✏️",
+        error: (err) => {
+          return err?.message || "Failed to edit machine";
+        },
+      });
+      setDetailDialogOpen(false);
+    }
+  };
 
   return (
     <motion.div
@@ -68,7 +103,11 @@ function ViewMachinePage({ machines = [] }) {
             key={searchQuery} // Re-trigger animation when search changes
           >
             {filteredMachines.map((machine) => (
-              <MachineCard key={machine.id} machine={machine} />
+              <MachineCard 
+                key={machine.id} 
+                machine={machine}
+                onCardClick={handleCardClick}
+              />
             ))}
           </motion.div>
         ) : (
@@ -90,6 +129,15 @@ function ViewMachinePage({ machines = [] }) {
           </motion.div>
         )}
       </div>
+
+      {/* Machine Detail Dialog */}
+      <MachineDetailDialog
+        open={detailDialogOpen}
+        onOpenChange={setDetailDialogOpen}
+        machine={selectedMachine}
+        onDelete={handleDeleteMachine}
+        onEdit={handleEditMachine}
+      />
     </motion.div>
   );
 }
