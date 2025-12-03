@@ -131,6 +131,7 @@ function App() {
                         machines={machines.machines}
                         onDeleteMachine={machines.useDeleteMachine}
                         onEditMachine={machines.useEditMachine}
+                        onFetchMachineStatus={status.fetchStatusByMachineId}
                       />
                     }
                   />

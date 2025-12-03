@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { machineContainerVariants, emptyStateVariants } from "@/components/MotionVariant";
 import { toast } from "sonner";
 
-function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine }) {
+function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine, onFetchMachineStatus }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMachine, setSelectedMachine] = useState(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
@@ -137,6 +137,7 @@ function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine }) {
         machine={selectedMachine}
         onDelete={handleDeleteMachine}
         onEdit={handleEditMachine}
+        onFetchStatus={onFetchMachineStatus}
       />
     </motion.div>
   );

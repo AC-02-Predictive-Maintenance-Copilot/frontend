@@ -260,7 +260,19 @@ async function getMachineStatusByMachineId(machineId) {
     };
   }
 
-  return { error: false, data: responseJson.data };
+  // Handle jika data adalah array, ambil yang terbaru
+  const statusData = responseJson.data;
+  if (Array.isArray(statusData)) {
+    // Ambil status terbaru (index 0 atau yang paling akhir)
+    return { error: false, data: statusData[0] || null };
+  }
+  
+  // Jika statusData punya property statuses (nested)
+  if (statusData?.statuses) {
+    return { error: false, data: statusData.statuses[0] || null };
+  }
+
+  return { error: false, data: statusData };
 }
 
 async function createMachineStatus(statusData) {
