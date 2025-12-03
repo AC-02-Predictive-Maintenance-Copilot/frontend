@@ -232,7 +232,7 @@ async function editMachine(machineId, machineData) {
 
 // Machine Status API Functions
 async function getMachineStatuses() {
-  const response = await fetchWithToken(`${BASE_URL}/machine/status`);
+  const response = await fetchWithToken(`${BASE_URL}/machines/statuses/all`);
   const responseJson = await response.json();
 
   if (!response.ok || responseJson.error) {
@@ -247,7 +247,9 @@ async function getMachineStatuses() {
 }
 
 async function getMachineStatusByMachineId(machineId) {
-  const response = await fetchWithToken(`${BASE_URL}/machine/status/${machineId}`);
+  const response = await fetchWithToken(
+    `${BASE_URL}/machines/${machineId}/statuses`
+  );
   const responseJson = await response.json();
 
   if (!response.ok || responseJson.error) {
@@ -262,31 +264,51 @@ async function getMachineStatusByMachineId(machineId) {
 }
 
 async function createMachineStatus(statusData) {
-  const response = await fetchWithToken(`${BASE_URL}/machine/status`, {
+  console.log("Sending status data:", statusData);
+  
+  const processedData = {
+    ...statusData,
+    airTemperature: Number(statusData.airTemperature) || 0,
+    processTemperature: Number(statusData.processTemperature) || 0,
+    rotationalSpeed: Number(statusData.rotationalSpeed) || 0,
+    torque: Number(statusData.torque) || 0,
+    toolWear: Number(statusData.toolWear) || 0,
+    target: Number(statusData.target) || 0,
+  };
+    
+  const response = await fetchWithToken(`${BASE_URL}/machines/statuses`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(statusData),
+    body: JSON.stringify(processedData),
   });
 
   const responseJson = await response.json();
+  console.log("Backend response:", responseJson);
 
   if (!response.ok || responseJson.error) {
-    throw new Error(responseJson.message || "Failed to create machine status");
+    if (responseJson.errors && Array.isArray(responseJson.errors)) {
+      const errorMessages = responseJson.errors.map(err => err.message).join(", ");
+      throw new Error(errorMessages);
+    }
+    throw new Error(responseJson.message || responseJson.error || "Failed to create machine status");
   }
 
   return { error: false, message: responseJson.message };
 }
 
 async function updateMachineStatus(statusId, statusData) {
-  const response = await fetchWithToken(`${BASE_URL}/machine/status/${statusId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(statusData),
-  });
+  const response = await fetchWithToken(
+    `${BASE_URL}/machines/statuses/${statusId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(statusData),
+    }
+  );
 
   const responseJson = await response.json();
 
@@ -298,9 +320,12 @@ async function updateMachineStatus(statusId, statusData) {
 }
 
 async function deleteMachineStatus(statusId) {
-  const response = await fetchWithToken(`${BASE_URL}/machine/status/${statusId}`, {
-    method: "DELETE",
-  });
+  const response = await fetchWithToken(
+    `${BASE_URL}/machines/statuses/${statusId}`,
+    {
+      method: "DELETE",
+    }
+  );
 
   const responseJson = await response.json();
 

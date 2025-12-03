@@ -56,7 +56,6 @@ export function useStatus() {
     try {
       const { error, message } = await createMachineStatus(statusData);
       if (!error) {
-        // Optionally refresh statuses after creation
         await fetchStatuses();
         return { success: true, message };
       } else {

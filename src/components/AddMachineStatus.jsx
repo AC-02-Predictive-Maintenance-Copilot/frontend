@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { containerVariants, itemVariants } from "@/components/MotionVariant";
 
 // Zod validation schema
@@ -39,29 +39,58 @@ const formSchema = z.object({
     required_error: "Type is required",
   }),
   airTemperature: z
-    .number({ invalid_type_error: "Must be a number" })
-    .min(0, "Air temperature must be positive")
-    .max(500, "Air temperature must be less than 500"),
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      return typeof val === "string" ? parseFloat(val) : val;
+    })
+    .refine((val) => val !== undefined && !isNaN(val), { message: "Air temperature is required" })
+    .refine((val) => val >= 0, { message: "Air temperature must be positive" })
+    .refine((val) => val <= 500, { message: "Air temperature must be less than 500" }),
   processTemperature: z
-    .number({ invalid_type_error: "Must be a number" })
-    .min(0, "Process temperature must be positive")
-    .max(500, "Process temperature must be less than 500"),
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      return typeof val === "string" ? parseFloat(val) : val;
+    })
+    .refine((val) => val !== undefined && !isNaN(val), { message: "Process temperature is required" })
+    .refine((val) => val >= 0, { message: "Process temperature must be positive" })
+    .refine((val) => val <= 500, { message: "Process temperature must be less than 500" }),
   rotationalSpeed: z
-    .number({ invalid_type_error: "Must be a number" })
-    .min(0, "Rotational speed must be positive")
-    .max(10000, "Rotational speed must be less than 10000"),
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      return typeof val === "string" ? parseInt(val) : val;
+    })
+    .refine((val) => val !== undefined && !isNaN(val), { message: "Rotational speed is required" })
+    .refine((val) => val >= 0, { message: "Rotational speed must be positive" })
+    .refine((val) => val <= 10000, { message: "Rotational speed must be less than 10000" }),
   torque: z
-    .number({ invalid_type_error: "Must be a number" })
-    .min(0, "Torque must be positive")
-    .max(100, "Torque must be less than 100"),
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      return typeof val === "string" ? parseFloat(val) : val;
+    })
+    .refine((val) => val !== undefined && !isNaN(val), { message: "Torque is required" })
+    .refine((val) => val >= 0, { message: "Torque must be positive" })
+    .refine((val) => val <= 100, { message: "Torque must be less than 100" }),
   toolWear: z
-    .number({ invalid_type_error: "Must be a number" })
-    .min(0, "Tool wear must be positive")
-    .max(300, "Tool wear must be less than 300"),
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      return typeof val === "string" ? parseInt(val) : val;
+    })
+    .refine((val) => val !== undefined && !isNaN(val), { message: "Tool wear is required" })
+    .refine((val) => val >= 0, { message: "Tool wear must be positive" })
+    .refine((val) => val <= 300, { message: "Tool wear must be less than 300" }),
   target: z
-    .number({ invalid_type_error: "Must be a number" })
-    .min(0, "Target must be 0 or 1")
-    .max(1, "Target must be 0 or 1"),
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      return typeof val === "string" ? parseInt(val) : val;
+    })
+    .refine((val) => val !== undefined && !isNaN(val), { message: "Target is required" })
+    .refine((val) => val >= 0 && val <= 1, { message: "Target must be 0 or 1" }),
   failureType: z.string().optional(),
 });
 
@@ -71,28 +100,33 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
     defaultValues: {
       machineId: "",
       type: "",
-      airTemperature: 0,
-      processTemperature: 0,
-      rotationalSpeed: 0,
-      torque: 0,
-      toolWear: 0,
-      target: 0,
+      airTemperature: "",
+      processTemperature: "",
+      rotationalSpeed: "",
+      torque: "",
+      toolWear: "",
+      target: "",
       failureType: "",
     },
   });
 
   const onSubmit = async (data) => {
-    const promise = onCreateStatus(data);
-    toast.promise(promise, {
-      loading: "Adding machine status...",
-      success: () => {
-        form.reset();
-        if (onStatusAdded) onStatusAdded();
-        return "Machine status added successfully! ✅";
-      },
-      error: (err) => err?.message || "Failed to add machine status",
-    });
-    return promise;
+    try {
+      console.log("Form data before submission:", data);
+      const promise = onCreateStatus(data);
+      toast.promise(promise, {
+        loading: "Adding machine status...",
+        success: () => {
+          form.reset();
+          if (onStatusAdded) onStatusAdded();
+          return "Machine status added successfully! ✅";
+        },
+        error: (err) => err?.message || "Failed to add machine status",
+      });
+      await promise;
+    } catch (error) {
+      console.error("Form submission error:", error);
+    }
   };
 
   return (
@@ -189,9 +223,6 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
                             step="0.1"
                             placeholder="e.g., 288.2"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(parseFloat(e.target.value))
-                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -214,9 +245,6 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
                             step="0.1"
                             placeholder="e.g., 390.7"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(parseFloat(e.target.value))
-                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -238,9 +266,6 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
                             type="number"
                             placeholder="e.g., 1108"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(parseInt(e.target.value))
-                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -263,9 +288,6 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
                             step="0.1"
                             placeholder="e.g., 30.3"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(parseFloat(e.target.value))
-                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -287,9 +309,6 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
                             type="number"
                             placeholder="e.g., 1"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(parseInt(e.target.value))
-                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -307,10 +326,8 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
                       <FormItem>
                         <FormLabel>Target</FormLabel>
                         <Select
-                          onValueChange={(value) =>
-                            field.onChange(parseInt(value))
-                          }
-                          defaultValue={field.value?.toString()}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -356,21 +373,43 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
               </motion.div>
 
               {/* Submit Button */}
-              <motion.div variants={itemVariants}>
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={form.formState.isSubmitting}
-                >
-                  {form.formState.isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Adding...
-                    </>
-                  ) : (
-                    "Add Machine Status"
-                  )}
-                </Button>
+              <motion.div variants={itemVariants} className="space-y-3 pt-4">
+                <div className="flex gap-3">
+                  <motion.div
+                    className="flex-1"
+                    whileTap={{ scale: 0.995 }}
+                  >
+                    <Button
+                      type="submit"
+                      disabled={form.formState.isSubmitting}
+                      className="w-full"
+                      size="lg"
+                    >
+                      {form.formState.isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Adding Status...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="w-4 h-4 mr-2" />
+                          Add Machine Status
+                        </>
+                      )}
+                    </Button>
+                  </motion.div>
+                  <motion.div whileTap={{ scale: 0.97 }}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => form.reset()}
+                      disabled={form.formState.isSubmitting}
+                      size="lg"
+                    >
+                      Reset
+                    </Button>
+                  </motion.div>
+                </div>
               </motion.div>
             </form>
           </Form>
