@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 function Progress({
   className,
   value,
+  indicatorClassName,
   ...props
 }) {
   return (
@@ -15,7 +16,7 @@ function Progress({
       {...props}>
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
-        className="bg-primary size-full flex-1 transition-all duration-300"
+        className={cn("bg-primary size-full flex-1 transition-all duration-300", indicatorClassName)}
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }} />
     </ProgressPrimitive.Root>
   );

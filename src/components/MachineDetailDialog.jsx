@@ -8,8 +8,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Pencil, Activity, Gauge, Thermometer, Zap } from "lucide-react";
+import { Trash2, Pencil, Activity, Gauge, Thermometer, Zap, Brain } from "lucide-react";
 import EditMachineDialog from "./EditMachineDialog";
+import AIAnalysisDialog from "./AIAnalysisDialog";
 import ConfirmDialog from "./ConfirmDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -27,6 +28,7 @@ function MachineDetailDialog({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [machineStatus, setMachineStatus] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState(false);
+  const [analysisDialogOpen, setAnalysisDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchMachineStatus = async () => {
@@ -270,6 +272,17 @@ function MachineDetailDialog({
                   <Pencil className="w-4 h-4 mr-2" />
                   Edit
                 </Button>
+                {machineStatus?.machineAnalysis?.[0] && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setAnalysisDialogOpen(true)}
+                  >
+                    <Brain className="w-4 h-4 mr-2" />
+                    View Analysis
+                  </Button>
+                )}
               </div>
             </div>
           )}
@@ -283,6 +296,14 @@ function MachineDetailDialog({
         machine={machine}
         onConfirm={onEdit}
         onOpenChangeParent={onOpenChange}
+      />
+
+      {/* AI Analysis Dialog */}
+      <AIAnalysisDialog
+        open={analysisDialogOpen}
+        onOpenChange={setAnalysisDialogOpen}
+        analysis={machineStatus?.machineAnalysis?.[0]}
+        machineName={machine?.name}
       />
     </>
   );
