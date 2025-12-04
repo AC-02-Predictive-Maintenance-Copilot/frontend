@@ -20,6 +20,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTickets } from "@/hooks/useTickets";
 import { useMachine } from "@/hooks/useMachine";
 import { useStatus } from "./hooks/useStatus";
+import { useUsers } from "./hooks/useUsers";
 import { Toaster } from "@/components/ui/sonner";
 import AddMachinePage from "./pages/AddMachinePage";
 import ViewMachinePage from "./pages/ViewMachinePage";
@@ -34,6 +35,7 @@ function App() {
   const status = useStatus();
   const navigate = useNavigate();
   const location = useLocation();
+  const users = useUsers();
 
   React.useEffect(() => {
     const initApp = async () => {
@@ -182,7 +184,7 @@ function App() {
                   />
                   <Route
                     path="/users"
-                    element={<UserManagementPage />}
+                    element={<UserManagementPage useUsers={users} />}
                   />
                   <Route path="/overview" element={<OverviewPage />} />
                   <Route path="/" element={<OverviewPage />} />
