@@ -353,6 +353,81 @@ async function deleteMachineStatus(statusId) {
   return { error: false, message: responseJson.message };
 }
 
+async function getAllUsers() {
+  const response = await fetchWithToken(`${BASE_URL}/users`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Failed to fetch users",
+    };
+  }
+
+  return { error: false, data: responseJson.data.users };
+}
+
+async function getUserById(userId) {
+  const response = await fetchWithToken(`${BASE_URL}/users/${userId}`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Failed to fetch user",
+    };
+  }
+
+  return { error: false, data: responseJson.data.user };
+}
+
+async function verifyUser(userId) {
+  const response = await fetchWithToken(`${BASE_URL}/users/${userId}/verify`, {
+    method: "PATCH",
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to verify user");
+  }
+
+  return { error: false, data: responseJson.data.user, message: responseJson.message };
+}
+
+async function unverifyUser(userId) {
+  const response = await fetchWithToken(`${BASE_URL}/users/${userId}/unverify`, {
+    method: "PATCH",
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to unverify user");
+  }
+
+  return { error: false, data: responseJson.data.user, message: responseJson.message };
+}
+
+async function deleteUser(userId) {
+  const response = await fetchWithToken(`${BASE_URL}/users/${userId}`, {
+    method: "DELETE",
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      message: responseJson.message || "Failed to delete user",
+    };
+  }
+
+  return { error: false, message: responseJson.message };
+}
+
 export {
   getAccessToken,
   putAccessToken,
@@ -374,4 +449,9 @@ export {
   createMachineStatus,
   updateMachineStatus,
   deleteMachineStatus,
+  getAllUsers,
+  getUserById,
+  verifyUser,
+  unverifyUser,
+  deleteUser,
 };

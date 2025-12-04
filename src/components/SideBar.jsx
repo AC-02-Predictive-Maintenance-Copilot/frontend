@@ -1,5 +1,5 @@
 import React from "react";
-import { Brain, Bot, Cog, Eye, Plus, Monitor, Ticket, ChartArea } from "lucide-react";
+import { Brain, Bot, Cog, Eye, Plus, Monitor, Ticket, ChartArea, Users } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +29,15 @@ const simpleMenuItems = [
     title: "Chatbot",
     url: "/chat",
     icon: Brain,
+  },
+];
+
+// Admin only menu items
+const adminMenuItems = [
+  {
+    title: "User Management",
+    url: "/users",
+    icon: Users,
   },
 ];
 
@@ -77,6 +86,7 @@ const collapsibleMenuItems = [
 
 function SideBar({ onLogout, user }) {
   const [logoutDialogOpen, setLogoutDialogOpen] = React.useState(false);
+  const isAdmin = user?.role === "ADMIN";
 
   const handleLogoutClick = () => {
     setLogoutDialogOpen(true);
@@ -141,6 +151,20 @@ function SideBar({ onLogout, user }) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+
+          {/* Admin Only Section */}
+          {isAdmin && (
+            <SidebarGroup>
+              <SidebarGroupLabel className="px-2 text-xs">Admin</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {adminMenuItems.map((item) => (
+                    <SidebarMenuSimple key={item.title} item={item} />
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
         </SidebarContent>
 
         <SidebarFooter className="border-t border-sidebar-border p-2">

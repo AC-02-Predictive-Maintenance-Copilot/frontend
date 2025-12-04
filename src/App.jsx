@@ -14,7 +14,8 @@ import RegisterPage from "@/pages/RegisterPage";
 import TicketPage from "./pages/TicketPage";
 import CreateTicketPage from "./pages/CreateTicketPage";
 import OverviewPage from "./pages/OverviewPage";
-import { Routes, Route } from "react-router-dom";
+import UserManagementPage from "./pages/UserManagementPage";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTickets } from "@/hooks/useTickets";
 import { useMachine } from "@/hooks/useMachine";
@@ -31,6 +32,8 @@ function App() {
   const tickets = useTickets();
   const machines = useMachine();
   const status = useStatus();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   React.useEffect(() => {
     const initApp = async () => {
@@ -40,6 +43,21 @@ function App() {
     initApp();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Redirect ke overview setelah login dan protect admin routes
+  React.useEffect(() => {
+    if (auth.user) {
+      // Redirect ke overview jika di halaman login atau root
+      if (location.pathname === "/" || location.pathname === "/login") {
+        navigate("/overview", { replace: true });
+      }
+    } else if (!auth.isLoading && !auth.user) {
+      // Jika user logout, redirect ke login page
+      if (location.pathname !== "/" && location.pathname !== "/register") {
+        navigate("/", { replace: true });
+      }
+    }
+  }, [auth.user, auth.isLoading, location.pathname, navigate]);
 
   // Fetch tickets setelah user login
   React.useEffect(() => {
@@ -161,6 +179,10 @@ function App() {
                     element={
                       <ChatPage onSendChat={handleSendChat} user={auth.user} />
                     }
+                  />
+                  <Route
+                    path="/users"
+                    element={<UserManagementPage />}
                   />
                   <Route path="/overview" element={<OverviewPage />} />
                   <Route path="/" element={<OverviewPage />} />

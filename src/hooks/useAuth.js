@@ -22,11 +22,24 @@ export function useAuth() {
 
     if (token) {
       const { error, data } = await getUserLogged();
-      
+
       console.log("getUserLogged response:", { error, data });
 
-      if (!error) {
-        setUser(data);
+      if (!error && data) {
+        // Cek status verifikasi user
+        // Jika isVerified false, 0, atau null - logout user
+        if (
+          data.isVerified === false ||
+          data.isVerified === 0 ||
+          data.isVerified === null
+        ) {
+          console.log("User not verified, removing access");
+          removeAccessToken();
+          setUser(null);
+          setError("Your account is pending admin approval.");
+        } else {
+          setUser(data);
+        }
       } else {
         removeAccessToken();
         setUser(null);
@@ -43,13 +56,36 @@ export function useAuth() {
     try {
       const { data } = await loginAPI({ email, password });
 
-      // Simpan token ke local storage (backend mengembalikan data.token)
+      console.log("Login response:", data);
+      console.log(
+        "isVerified value:",
+        data.user?.isVerified,
+        "type:",
+        typeof data.user?.isVerified
+      );
+
+      // Validasi untuk isVerified
+      // JANGAN simpan token jika user belum verified
+      const isVerified = data.user?.isVerified;
+      const role = data.user?.role;
+
+      if (!isVerified && role !== "ADMIN") {
+        const verificationError = new Error(
+          "Your account is pending admin approval. Please wait for verification."
+        );
+        setError(verificationError.message);
+        // JANGAN simpan token untuk user yang belum verified
+        throw verificationError;
+      }
+
+      // Hanya sampai sini jika user sudah verified
+      // Simpan token ke local storage
       putAccessToken(data.token);
 
-      // Set user langsung
+      // Set user
       setUser(data.user);
       setError(null);
-      
+
       // Return data untuk toast success message
       return data.user;
     } catch (err) {
@@ -80,7 +116,7 @@ export function useAuth() {
         email,
         password,
       });
-      
+
       setError(null);
       return data; // Return data untuk toast success
     } catch (err) {

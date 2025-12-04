@@ -92,7 +92,7 @@ const RegisterInput = ({ register }) => {
     
     toast.promise(registerPromise, {
       loading: "Creating account...",
-      success: "Registration successful! Redirecting to login... 🎉",
+      success: "Registration successful! Please wait for admin approval before logging in. 🎉",
       error: (err) => err?.message || "Registration failed",
     });
 
@@ -101,7 +101,7 @@ const RegisterInput = ({ register }) => {
       await registerPromise;
       setTimeout(() => {
         navigate("/");
-      }, 1500);
+      }, 2500);
     } catch (err) {
       console.error("Registration error:", err);
     } finally {

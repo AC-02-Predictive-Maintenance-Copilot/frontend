@@ -38,7 +38,14 @@ function LoginInput({ login, isLoading }) {
     toast.promise(login(email, password), {
       loading: "Logging in...",
       success: (user) => `Welcome back, ${user.name}! 👋`,
-      error: (err) => err?.message || "Login failed",
+      error: (err) => {
+        const message = err?.message || "Login failed";
+        // Cek jika error terkait verifikasi
+        if (message.toLowerCase().includes("verif") || message.toLowerCase().includes("approv")) {
+          return "⏳ Your account is pending admin approval. Please wait for verification.";
+        }
+        return message;
+      },
     });
   };
 
