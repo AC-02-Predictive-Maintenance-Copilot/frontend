@@ -1,4 +1,6 @@
-const BASE_URL = "/api/v1"
+const BASE_URL = import.meta.env.DEV
+  ? "/api/v1" // Dev dg proxy              
+  : "https://backend-ruddy-eta.vercel.app/api/v1"; // prod
 
 function getAccessToken() {
   return localStorage.getItem("accessToken");
