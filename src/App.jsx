@@ -23,6 +23,7 @@ import { Toaster } from "@/components/ui/sonner";
 import AddMachinePage from "./pages/AddMachinePage";
 import ViewMachinePage from "./pages/ViewMachinePage";
 import AddMachineStatus from "./pages/AddMachineStatusPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   // Custom hooks untuk auth dan tickets
@@ -163,6 +164,7 @@ function App() {
                   />
                   <Route path="/overview" element={<OverviewPage />} />
                   <Route path="/" element={<OverviewPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </main>
             </SidebarInset>
