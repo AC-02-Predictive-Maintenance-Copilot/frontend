@@ -11,7 +11,7 @@ function AddMachinePage({ onAddMachine, onMachineAdded }) {
       transition={{ duration: 0.3 }}
       className="flex-1 w-full p-6"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <HeaderText
           title="Add Machine"
           subtitle="Add a new machine to the system"

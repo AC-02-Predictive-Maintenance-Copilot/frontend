@@ -499,6 +499,18 @@ async function deleteChatMessageById(messageId) {
   return { error: false, message: responseJson.message };
 }
 
+// Overview API
+async function getOverview() {
+  const response = await fetchWithToken(`${BASE_URL}/overview`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to get overview data");
+  }
+
+  return responseJson.data;
+}
+
 export {
   getAccessToken,
   putAccessToken,
@@ -529,4 +541,5 @@ export {
   createChatMessage,
   deleteAllChatMessages,
   deleteChatMessageById,
+  getOverview,
 };

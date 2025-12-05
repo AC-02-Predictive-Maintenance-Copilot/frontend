@@ -11,7 +11,7 @@ function CreateTicketPage({ machines = [], onCreateTicket, onTicketCreated }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <HeaderText
           title="Create New Ticket"
           subtitle="Submit a maintenance request or report an issue"

@@ -63,7 +63,7 @@ function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine, onFetc
       transition={{ duration: 0.3 }}
       className="flex-1 w-full p-6"
     >
-      <div className="container mx-auto space-y-6 max-w-4xl">
+      <div className="container mx-auto space-y-6 max-w-5xl">
         <HeaderText
           title="Machines"
           subtitle="View and manage all your machines"

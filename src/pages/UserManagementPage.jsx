@@ -11,7 +11,7 @@ function UserManagementPage({ useUsers }) {
 
   return (
     <div className="flex-1 w-full p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <HeaderText
           title="User Management"
           subtitle="Manage engineer accounts and permissions"
