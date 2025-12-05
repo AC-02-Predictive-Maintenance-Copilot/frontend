@@ -8,7 +8,17 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Pencil, Activity, Gauge, Thermometer, Zap, Brain } from "lucide-react";
+import {
+  Trash2,
+  Pencil,
+  Activity,
+  Gauge,
+  Thermometer,
+  Zap,
+  Brain,
+  Clock,
+  Grid2X2,
+} from "lucide-react";
 import EditMachineDialog from "./EditMachineDialog";
 import AIAnalysisDialog from "./AIAnalysisDialog";
 import ConfirmDialog from "./ConfirmDialog";
@@ -154,7 +164,12 @@ function MachineDetailDialog({
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {/* Type */}
                     <div className="p-4 bg-muted rounded-lg">
-                      <p className="text-xs text-muted-foreground mb-2">Type</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Grid2X2 className="w-4 h-4 text-orange-500" />
+                        <p className="text-xs text-muted-foreground">
+                         Type
+                        </p>
+                      </div>
                       <p className="text-base font-semibold">
                         {machineStatus.type === "L"
                           ? "Low"
@@ -180,7 +195,7 @@ function MachineDetailDialog({
                     {/* Process Temperature */}
                     <div className="p-4 bg-muted rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
-                        <Thermometer className="w-4 h-4 text-orange-500" />
+                        <Thermometer className="w-4 h-4 text-red-500" />
                         <p className="text-xs text-muted-foreground">
                           Process Temp
                         </p>
@@ -216,9 +231,12 @@ function MachineDetailDialog({
 
                     {/* Tool Wear */}
                     <div className="p-4 bg-muted rounded-lg">
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Tool Wear
-                      </p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Clock className="w-4 h-4 text-green-500" />
+                        <p className="text-xs text-muted-foreground">
+                          Tool Wear
+                        </p>
+                      </div>
                       <p className="text-base font-semibold">
                         {machineStatus.toolWear ?? 0} min
                       </p>
@@ -263,7 +281,9 @@ function MachineDetailDialog({
                   variant="outline"
                   size="sm"
                   className="flex-1"
-                  onClick={() => handleDeleteClick(machine.id, machine.productId)}
+                  onClick={() =>
+                    handleDeleteClick(machine.id, machine.productId)
+                  }
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete
