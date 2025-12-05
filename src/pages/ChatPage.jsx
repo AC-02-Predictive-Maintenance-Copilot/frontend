@@ -67,33 +67,6 @@ function ChatPage({ user }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {messages.length > 0 && (
-        <div className="flex items-center justify-end px-4 py-2 border-b">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-muted-foreground">
-                <Trash2 className="h-4 w-4 mr-1" />
-                Clear Chat
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Clear Chat History</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete all chat messages? This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearChat}>
-                  Delete All
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      )}
-
       {error && (
         <div className="mx-4 mt-2 p-3 bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm">
           {error}
@@ -139,12 +112,33 @@ function ChatPage({ user }) {
 
           <div className="border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4">
             <div className="max-w-6xl mx-auto py-4">
-              <ChatCard
-                handleChange={handleChange}
-                handleSubmit={handleSubmit}
-                chat={currentInput}
-                disabled={isLoading}
-              />
+              <AlertDialog>
+                <ChatCard
+                  handleChange={handleChange}
+                  handleSubmit={handleSubmit}
+                  chat={currentInput}
+                  disabled={isLoading}
+                  showClearButton={messages.length > 0}
+                  onClearChat={() => document.getElementById('clear-chat-trigger')?.click()}
+                />
+                <AlertDialogTrigger asChild>
+                  <button id="clear-chat-trigger" className="hidden" />
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Clear Chat History</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete all chat messages? This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleClearChat}>
+                      Delete All
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         </>
