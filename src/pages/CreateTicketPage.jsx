@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import CreateTicket from "@/components/CreateTicket";
+import CreateTicket from "@/components/ticket/CreateTicket";
 import HeaderText from "@/components/HeaderText";
 
 function CreateTicketPage({ machines = [], onCreateTicket, onTicketCreated }) {

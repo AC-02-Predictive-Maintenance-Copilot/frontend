@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import ChatCard from "@/components/ChatCard";
-import ChatDesc from "@/components/ChatDesc";
-import ChatBubble from "@/components/ChatBubble";
+import ChatCard from "@/components/chatbot/ChatCard";
+import ChatDesc from "@/components/chatbot/ChatDesc";
+import ChatBubble from "@/components/chatbot/ChatBubble";
 import { useChat } from "@/hooks/useChat";
 import { Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";

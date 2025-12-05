@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { toast } from "sonner";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { containerVariants, itemVariants } from "@/components/MotionVariant";

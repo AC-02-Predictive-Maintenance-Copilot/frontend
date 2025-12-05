@@ -5,7 +5,7 @@ import {
   SidebarTrigger,
   SidebarInset,
 } from "@/components/ui/sidebar";
-import SideBar from "@/components/SideBar";
+import SideBar from "@/components/sidebar/SideBar";
 import { Menu } from "lucide-react";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { UserProvider } from "@/context/UserContext";

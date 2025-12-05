@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import MachineCard from "@/components/MachineCard";
-import MachineDetailDialog from "@/components/MachineDetailDialog";
+import MachineCard from "@/components/machine/MachineCard";
+import MachineDetailDialog from "@/components/machine/MachineDetailDialog";
 import HeaderText from "@/components/HeaderText";
 import { Input } from "@/components/ui/input";
 import { Search, Filter } from "lucide-react";

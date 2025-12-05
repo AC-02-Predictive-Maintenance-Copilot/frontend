@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { StatusBadge, PriorityBadge } from "@/components/StatusBadge";
+import { StatusBadge, PriorityBadge } from "@/components/ticket/StatusBadge";
 
 export function TicketDetailDialog({ ticket, open, onOpenChange }) {
   if (!ticket) return null;

@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import EditMachineDialog from "./EditMachineDialog";
 import AIAnalysisDialog from "./AIAnalysisDialog";
-import ConfirmDialog from "./ConfirmDialog";
+import ConfirmDialog from "../ConfirmDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function MachineDetailDialog({

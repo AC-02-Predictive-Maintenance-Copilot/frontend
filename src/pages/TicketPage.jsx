@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import DataTableDemo from "@/components/TicketTable";
-import { TicketDetailDialog } from "@/components/TicketDetail";
+import DataTableDemo from "@/components/ticket/TicketTable";
+import { TicketDetailDialog } from "@/components/ticket/TicketDetail";
 import HeaderText from "@/components/HeaderText";
 
 function TicketPage({ tickets, loading, onDeleteTicket, machines=[], onEditTicket }) {

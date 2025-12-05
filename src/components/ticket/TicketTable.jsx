@@ -26,7 +26,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import ConfirmDialog from "./ConfirmDialog";
+import ConfirmDialog from "../ConfirmDialog";
 import CreateColumns from "./ColumnTicketTable";
 import EditTicket from "./EditTicket";
 import UpdateStatusDialog from "./UpdateStatusDialog";

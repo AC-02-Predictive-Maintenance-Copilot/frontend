@@ -1,5 +1,5 @@
 import React from "react";
-import AddMachineStatus from "@/components/AddMachineStatus";
+import AddMachineStatus from "@/components/machine/AddMachineStatus";
 import HeaderText from "@/components/HeaderText";
 import { motion } from "framer-motion";
 

@@ -9,7 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
 import { motion } from "framer-motion";
-import { machineCardVariants } from "./MotionVariant";
+import { machineCardVariants } from "../MotionVariant";
 
 function MachineCard({ machine, onCardClick }) {
   const [isHovered, setIsHovered] = React.useState(false);

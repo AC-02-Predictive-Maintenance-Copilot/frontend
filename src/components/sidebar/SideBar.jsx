@@ -11,11 +11,11 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThemeToggle } from "@/components/sidebar/ThemeToggle";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { NavUser } from "./AvatarProfile";
-import SidebarMenuSimple from "@/components/SidebarMenuSimple";
-import SidebarMenuCollapsible from "@/components/SidebarMenuCollapsible";
+import SidebarMenuSimple from "@/components/sidebar/SidebarMenuSimple";
+import SidebarMenuCollapsible from "@/components/sidebar/SidebarMenuCollapsible";
 import { motion } from "framer-motion";
 
 // Menu items
