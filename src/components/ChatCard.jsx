@@ -28,7 +28,7 @@ function ChatCard({ handleChange, handleSubmit, chat, disabled = false, onClearC
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.2 }}
     >
-      <InputGroup className="flex w-[50%] mx-auto">
+      <InputGroup className="flex w-[70%] mx-auto">
         <InputGroupTextarea
           placeholder={disabled ? "Connecting..." : "Ask, Search or Chat..."}
           name="chat"
