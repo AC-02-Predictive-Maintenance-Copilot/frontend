@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   getAllUsers,
   getUserById,
@@ -10,10 +10,10 @@ import { toast } from "sonner";
 
 export function useUsers() {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -21,7 +21,9 @@ export function useUsers() {
 
       if (error) {
         setError(message);
-        toast.error(message || "Failed to fetch users");
+        if (!message?.includes("403") && !message?.toLowerCase().includes("forbidden")) {
+          toast.error(message || "Failed to fetch users");
+        }
         return;
       }
 
@@ -29,15 +31,14 @@ export function useUsers() {
     } catch (err) {
       const errorMessage = err.message || "An error occurred while fetching users";
       setError(errorMessage);
-      toast.error(errorMessage);
+      if (!errorMessage?.includes("403") && !errorMessage?.toLowerCase().includes("forbidden")) {
+        toast.error(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchUsers();
   }, []);
+
 
   const handleVerifyUser = async (userId) => {
     try {
@@ -98,18 +99,15 @@ export function useUsers() {
     }
   };
 
-  const refetch = () => {
-    fetchUsers();
-  };
-
   return {
     users,
     loading,
     error,
+    fetchUsers,
     handleVerifyUser,
     handleUnverifyUser,
     handleDeleteUser,
-    refetch,
+    refetch: fetchUsers,
   };
 }
 

@@ -24,7 +24,7 @@ function ChatBubble({ message, isUser }) {
         className={`max-w-[70%] px-4 py-3 rounded-xl shadow-sm ${
           isUser
             ? "bg-primary text-primary-foreground rounded-br-sm"
-            : "bg-muted text-muted-foreground rounded-bl-sm"
+            : "bg-muted rounded-bl-sm"
         }`}
       >
         <p className="text-sm leading-relaxed whitespace-pre-wrap wrap-break-word">

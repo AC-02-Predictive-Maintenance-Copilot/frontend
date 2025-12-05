@@ -70,10 +70,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.user]);
 
-  const handleSendChat = (chat) => {
-    console.log("Chat sent:", chat);
-  };
-
   if (auth.isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -179,7 +175,7 @@ function App() {
                   <Route
                     path="/chat"
                     element={
-                      <ChatPage onSendChat={handleSendChat} user={auth.user} />
+                      <ChatPage user={auth.user} />
                     }
                   />
                   <Route

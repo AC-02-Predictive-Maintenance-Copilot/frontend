@@ -73,6 +73,7 @@ function removeAccessToken() {
   return localStorage.removeItem("accessToken");
 }
 
+// Ticket API
 async function getTicketsByMachine(machineId) {
   const response = await fetchWithToken(
     `${BASE_URL}/machines/${machineId}/tickets`
@@ -161,6 +162,7 @@ async function deleteTicket(ticketId) {
   return { error: false, message: responseJson.message };
 }
 
+// Machine API
 async function getMachines() {
   const response = await fetchWithToken(`${BASE_URL}/machines`);
   const responseJson = await response.json();
@@ -353,6 +355,7 @@ async function deleteMachineStatus(statusId) {
   return { error: false, message: responseJson.message };
 }
 
+// User Management API
 async function getAllUsers() {
   const response = await fetchWithToken(`${BASE_URL}/users`);
   const responseJson = await response.json();
@@ -428,6 +431,74 @@ async function deleteUser(userId) {
   return { error: false, message: responseJson.message };
 }
 
+// Chat API
+async function getChatMessages() {
+  const response = await fetchWithToken(`${BASE_URL}/chat`);
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      data: null,
+      message: responseJson.message || "Failed to fetch chat messages",
+    };
+  }
+
+  return { error: false, data: responseJson.data.messages };
+}
+
+async function createChatMessage(content) {
+  const response = await fetchWithToken(`${BASE_URL}/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content }),
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || "Failed to create chat message");
+  }
+
+  return { error: false, data: responseJson.data.message };
+}
+
+async function deleteAllChatMessages() {
+  const response = await fetchWithToken(`${BASE_URL}/chat`, {
+    method: "DELETE",
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      message: responseJson.message || "Failed to delete all chat messages",
+    };
+  }
+
+  return { error: false, message: responseJson.message };
+}
+
+async function deleteChatMessageById(messageId) {
+  const response = await fetchWithToken(`${BASE_URL}/chat/${messageId}`, {
+    method: "DELETE",
+  });
+
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    return {
+      error: true,
+      message: responseJson.message || "Failed to delete chat message",
+    };
+  }
+
+  return { error: false, message: responseJson.message };
+}
+
 export {
   getAccessToken,
   putAccessToken,
@@ -454,4 +525,8 @@ export {
   verifyUser,
   unverifyUser,
   deleteUser,
+  getChatMessages,
+  createChatMessage,
+  deleteAllChatMessages,
+  deleteChatMessageById,
 };

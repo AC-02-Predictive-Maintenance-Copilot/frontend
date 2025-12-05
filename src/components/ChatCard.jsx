@@ -8,9 +8,9 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 
-function ChatCard({ handleChange, handleSubmit, chat }) {
+function ChatCard({ handleChange, handleSubmit, chat, disabled = false }) {
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !disabled) {
       e.preventDefault();
       handleSubmit();
     }
@@ -24,19 +24,21 @@ function ChatCard({ handleChange, handleSubmit, chat }) {
     >
       <InputGroup className="flex w-[50%] mx-auto">
         <InputGroupTextarea
-          placeholder="Ask, Search or Chat..."
+          placeholder={disabled ? "Connecting..." : "Ask, Search or Chat..."}
           name="chat"
           id="chat"
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           value={chat}
+          disabled={disabled}
         />
         <InputGroupAddon align="block-end">
           <InputGroupButton
             variant="default"
-            className="rounded-full ml-auto cursor-pointer"
+            className="rounded-full ml-auto cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             size="icon-xs"
             onClick={handleSubmit}
+            disabled={disabled || !chat?.trim()}
           >
             <ArrowUpRightIcon />
             <span className="sr-only">Send</span>
