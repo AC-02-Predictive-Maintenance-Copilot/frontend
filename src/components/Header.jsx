@@ -94,7 +94,7 @@ function Header() {
               <ChevronRight className="h-4 w-4 text-muted-foreground" />
               {breadcrumb.isLast ? (
                 <span className="font-medium text-foreground">
-                  {breadcrumb.name}
+                  {breadcrumb.name.replace("-", " ")}
                 </span>
               ) : (
                 <Link
