@@ -1,5 +1,8 @@
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import {
+  oneDark,
+  oneLight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 /**
  * Get markdown components configuration for ReactMarkdown
@@ -21,9 +24,10 @@ export function getMarkdownComponents(isDark) {
             PreTag="div"
             className="rounded-lg"
             customStyle={{
-              margin: "0.5rem 0",
+              margin: "0",
               borderRadius: "0.5rem",
-              fontSize: "0.75rem",
+              fontSize: "1rem",
+              padding: "1.25rem",
             }}
             {...props}
           >
@@ -40,9 +44,11 @@ export function getMarkdownComponents(isDark) {
             PreTag="div"
             className="rounded-lg"
             customStyle={{
-              margin: "0.5rem 0",
+              margin: "0",
               borderRadius: "0.5rem",
-              fontSize: "0.75rem",
+              fontSize: "1rem",
+              padding: "0.25rem 0.375rem",
+              border:"none",
             }}
             {...props}
           >
@@ -167,9 +173,7 @@ export function getMarkdownComponents(isDark) {
     },
 
     td({ children }) {
-      return (
-        <td className="border border-border px-2 py-1">{children}</td>
-      );
+      return <td className="border border-border px-2 py-1">{children}</td>;
     },
 
     // Horizontal rule

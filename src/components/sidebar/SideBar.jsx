@@ -11,7 +11,6 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { ThemeToggle } from "@/components/sidebar/ThemeToggle";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { NavUser } from "./AvatarProfile";
 import SidebarMenuSimple from "@/components/sidebar/SidebarMenuSimple";
@@ -50,7 +49,7 @@ const collapsibleMenuItems = [
     subItems: [
       {
         title: "View Machine",
-        url: "/machines/view",
+        url: "/machines",
         icon: Eye,
       },
       {
@@ -60,7 +59,7 @@ const collapsibleMenuItems = [
       },
       {
         title: "Add Machine Status",
-        url: "/machines/status/add",
+        url: "/machines/add-status",
         icon: ChartArea,
       },
     ],
@@ -72,7 +71,7 @@ const collapsibleMenuItems = [
     subItems: [
       {
         title: "View Tickets",
-        url: "/tickets/view",
+        url: "/tickets",
         icon: Eye,
       },
       {
@@ -169,9 +168,6 @@ function SideBar({ onLogout, user }) {
 
         <SidebarFooter className="border-t border-sidebar-border p-2">
           <SidebarMenu>
-            <SidebarMenuItem>
-              <ThemeToggle />
-            </SidebarMenuItem>
             <SidebarMenuItem>
               <NavUser user={user} logout={handleLogoutClick} />
             </SidebarMenuItem>

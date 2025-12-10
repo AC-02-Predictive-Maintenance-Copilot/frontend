@@ -2,11 +2,10 @@ import React from "react";
 import ChatPage from "@/pages/ChatPage";
 import {
   SidebarProvider,
-  SidebarTrigger,
   SidebarInset,
 } from "@/components/ui/sidebar";
 import SideBar from "@/components/sidebar/SideBar";
-import { Menu } from "lucide-react";
+import Header from "@/components/Header";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { UserProvider } from "@/context/UserContext";
 import LoginPage from "@/pages/LoginPage";
@@ -113,15 +112,11 @@ function App() {
           <div className="flex min-h-screen w-full bg-background">
             <SideBar onLogout={auth.logout} user={auth.user} />
             <SidebarInset className="flex-1">
-              <header className="sticky top-0 z-10 flex h-16 items-center gap-4 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4">
-                <SidebarTrigger className="h-8 w-8">
-                  <Menu className="h-5 w-5" />
-                </SidebarTrigger>
-              </header>
+              <Header />
               <main className="">
                 <Routes>
                   <Route
-                    path="/tickets/view"
+                    path="/tickets"
                     element={
                       <TicketPage
                         machines={machines.machines}
@@ -142,7 +137,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/machines/view"
+                    path="/machines"
                     element={
                       <ViewMachinePage
                         machines={machines.machines}
@@ -153,7 +148,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/machines/status/add"
+                    path="/machines/add-status"
                     element={
                       <AddMachineStatus
                         onCreateStatus={status.useCreateStatus}
