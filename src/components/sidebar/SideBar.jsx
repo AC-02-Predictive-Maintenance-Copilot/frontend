@@ -122,8 +122,8 @@ function SideBar({ onLogout, user }) {
               <img src="/logo-png.png" alt="AEGIS Logo" className="h-7 w-7" />
             </motion.div>
             <div className="flex flex-col overflow-hidden group-data-[collapsible=icon]:hidden">
-              <span className="font-semibold text-sm truncate">
-                AEGIS Maintenance Copilot
+              <span className="font-bold text-lg truncate">
+                AEGIS
               </span>
             </div>
           </motion.div>
