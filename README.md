@@ -17,8 +17,8 @@ AEGIS adalah aplikasi web berbasis React yang menyediakan antarmuka pengguna mod
 
 1. **Clone repository**
 	```bash
-	git clone <repo-url>
-	cd chatbot-ui
+	git clone https://github.com/AC-02-Predictive-Maintenance-Copilot/frontend.git
+	cd frontend
 	```
 
 2. **Install dependencies**
