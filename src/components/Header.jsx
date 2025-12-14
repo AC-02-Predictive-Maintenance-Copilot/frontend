@@ -5,6 +5,8 @@ import { Menu, Moon, Sun, ChevronRight, Home } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { KeyboardShortcutsDialog } from "@/components/KeyboardShortcutsDialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const breadcrumbMap = {
   overview: "Overview",
@@ -21,6 +23,7 @@ const breadcrumbMap = {
 function Header() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
+  const isMobile = useIsMobile();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -119,7 +122,13 @@ function Header() {
           {formatTime(currentTime)}
         </div>
 
-        <Separator orientation="vertical" className="h-6" />
+        {!isMobile && (
+          <>
+            <Separator orientation="vertical" className="h-6" />
+            <KeyboardShortcutsDialog />
+            <Separator orientation="vertical" className="h-6" />
+          </>
+        )}
 
         <Button
           variant="ghost"

@@ -88,17 +88,25 @@ const PRIORITY_OPTIONS = [
   },
 ];
 
-const CreateTicket = ({ onCreateTicket, onTicketCreated, machines = [] }) => {
+const CreateTicket = ({ 
+  onCreateTicket, 
+  onTicketCreated, 
+  machines = [], 
+  defaultMachine = null, 
+  defaultPriority = null, 
+  defaultProblem = null, 
+  defaultDetail = null 
+}) => {
   // Inisialisasi form dengan react-hook-form dan zodResolver
   // Tidak perlu state management lagi karena sudah pake react-hook-form
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      problem: "",
-      machine: "",
-      priority: "",
-      detail: "",
+      problem: defaultProblem || "",
+      machine: defaultMachine || "",
+      priority: defaultPriority || "",
+      detail: defaultDetail || "",
     },
   });
 

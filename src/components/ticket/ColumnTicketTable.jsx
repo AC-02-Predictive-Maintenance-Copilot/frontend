@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { StatusBadge, PriorityBadge } from "@/components/ticket/StatusBadge";
+import { Badge } from "@/components/ui/badge";
 
 // Funsi untuk sorting kolom yg dikirim
 const handleSort = (column) => {

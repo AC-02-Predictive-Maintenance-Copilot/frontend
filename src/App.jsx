@@ -20,11 +20,13 @@ import { useTickets } from "@/hooks/useTickets";
 import { useMachine } from "@/hooks/useMachine";
 import { useStatus } from "./hooks/useStatus";
 import { useUsers } from "./hooks/useUsers";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { Toaster } from "@/components/ui/sonner";
 import AddMachinePage from "./pages/AddMachinePage";
 import ViewMachinePage from "./pages/ViewMachinePage";
 import AddMachineStatus from "./pages/AddMachineStatusPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import { AdminGuard } from "@/components/guards/AdminGuard";
 
 function App() {
   // Custom hooks untuk auth dan tickets
@@ -35,7 +37,10 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const users = useUsers();
+// Enable global keyboard shortcuts
+  useKeyboardShortcuts();
 
+  
   React.useEffect(() => {
     const initApp = async () => {
       await auth.checkSession();
@@ -119,10 +124,10 @@ function App() {
                     path="/tickets"
                     element={
                       <TicketPage
-                        machines={machines.machines}
                         tickets={tickets.tickets}
                         loading={tickets.loading}
                         onDeleteTicket={tickets.useDeleteTicket}
+                        machines={machines.machines}
                         onEditTicket={tickets.useEditTicket}
                       />
                     }
@@ -175,7 +180,11 @@ function App() {
                   />
                   <Route
                     path="/users"
-                    element={<UserManagementPage useUsers={users} />}
+                    element={
+                      <AdminGuard user={auth.user}>
+                        <UserManagementPage useUsers={users} />
+                      </AdminGuard>
+                    }
                   />
                   <Route path="/overview" element={<OverviewPage />} />
                   <Route path="/" element={<OverviewPage />} />

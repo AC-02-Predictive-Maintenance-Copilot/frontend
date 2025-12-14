@@ -264,19 +264,21 @@ async function getMachineStatusByMachineId(machineId) {
     };
   }
 
-  // Handle jika data adalah array, ambil yang terbaru
+  // Handle jika data adalah array
   const statusData = responseJson.data;
+  
+  // Return seluruh array untuk history, atau ambil yang terbaru untuk single status
   if (Array.isArray(statusData)) {
-    // Ambil status terbaru (index 0 atau yang paling akhir)
-    return { error: false, data: statusData[0] || null };
+    return { error: false, data: statusData }; // Return all for history
   }
   
   // Jika statusData punya property statuses (nested)
-  if (statusData?.statuses) {
-    return { error: false, data: statusData.statuses[0] || null };
+  if (statusData?.statuses && Array.isArray(statusData.statuses)) {
+    return { error: false, data: statusData.statuses };
   }
 
-  return { error: false, data: statusData };
+  // Jika single object, wrap in array
+  return { error: false, data: [statusData] };
 }
 
 async function createMachineStatus(statusData) {

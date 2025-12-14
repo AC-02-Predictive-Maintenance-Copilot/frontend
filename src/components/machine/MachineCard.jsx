@@ -7,12 +7,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Settings, Plus, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 import { machineCardVariants } from "../MotionVariant";
+import { useNavigate } from "react-router-dom";
 
 function MachineCard({ machine, onCardClick }) {
   const [isHovered, setIsHovered] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleCreateTicket = (e) => {
+    e.stopPropagation();
+    navigate("/tickets/create", { state: { selectedMachine: machine.productId } });
+  };
+
+  const handleAddStatus = (e) => {
+    e.stopPropagation();
+    navigate("/machines/add-status", { state: { selectedMachine: machine.id } });
+  };
 
   return (
     <motion.div
@@ -57,6 +70,28 @@ function MachineCard({ machine, onCardClick }) {
               <p className="text-muted-foreground">Machine Name</p>
               <p className="font-semibold">{machine.name}</p>
             </div>
+          </div>
+
+          {/* Quick Action Buttons */}
+          <div className="mt-4 pt-4 border-t flex gap-2">
+            <Button 
+              onClick={handleCreateTicket}
+              variant="outline" 
+              size="sm" 
+              className="flex-1 gap-1.5 text-xs h-8"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Ticket
+            </Button>
+            <Button 
+              onClick={handleAddStatus}
+              variant="outline" 
+              size="sm" 
+              className="flex-1 gap-1.5 text-xs h-8"
+            >
+              <Activity className="w-3.5 h-3.5" />
+              Status
+            </Button>
           </div>
         </CardContent>
       </Card>

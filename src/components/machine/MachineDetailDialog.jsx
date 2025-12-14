@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Trash2,
   Pencil,
@@ -18,11 +19,14 @@ import {
   Brain,
   Clock,
   Grid2X2,
+  LineChart,
 } from "lucide-react";
 import EditMachineDialog from "./EditMachineDialog";
 import AIAnalysisDialog from "./AIAnalysisDialog";
+import { MachineStatusChart } from "./MachineStatusChart";
 import ConfirmDialog from "../ConfirmDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getMachineStatusByMachineId } from "@/utils/api";
 
 function MachineDetailDialog({
   open,
@@ -37,6 +41,7 @@ function MachineDetailDialog({
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [machineStatus, setMachineStatus] = useState(null);
+  const [statusHistory, setStatusHistory] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [analysisDialogOpen, setAnalysisDialogOpen] = useState(false);
 
@@ -45,12 +50,24 @@ function MachineDetailDialog({
       if (open && machine?.id && onFetchStatus) {
         setLoadingStatus(true);
         try {
+          // Fetch latest status
           const status = await onFetchStatus(machine.id);
           console.log("Fetched machine status:", status);
           setMachineStatus(status);
+
+          // Fetch status history
+          const historyResponse = await getMachineStatusByMachineId(machine.id);
+          if (!historyResponse.error && historyResponse.data) {
+            // If data is an array, use it; otherwise wrap in array
+            const history = Array.isArray(historyResponse.data) 
+              ? historyResponse.data 
+              : [historyResponse.data];
+            setStatusHistory(history.slice(0, 20)); // Last 20 readings
+          }
         } catch (error) {
           console.error("Error fetching machine status:", error);
           setMachineStatus(null);
+          setStatusHistory([]);
         } finally {
           setLoadingStatus(false);
         }
@@ -89,7 +106,7 @@ function MachineDetailDialog({
         cancelText="Cancel"
       />
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto custom-scrollbar">
           <DialogHeader>
             <DialogTitle>Machine Details</DialogTitle>
             <DialogDescription>
@@ -144,14 +161,20 @@ function MachineDetailDialog({
                 )}
               </div>
 
-              {/* Machine Status Section */}
-              <div className="border-t pt-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <Activity className="w-5 h-5 text-primary" />
-                  <h3 className="text-lg font-semibold">Latest Status</h3>
-                </div>
+              {/* Machine Status Section with Tabs */}
+              <Tabs defaultValue="current" className="border-t pt-4">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="current">Current Status</TabsTrigger>
+                  <TabsTrigger value="history">Status History</TabsTrigger>
+                </TabsList>
 
-                {loadingStatus ? (
+                <TabsContent value="current" className="space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Activity className="w-5 h-5 text-primary" />
+                    <h3 className="text-lg font-semibold">Latest Status</h3>
+                  </div>
+
+                  {loadingStatus ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     <Skeleton className="h-20 w-full" />
                     <Skeleton className="h-20 w-full" />
@@ -273,7 +296,20 @@ function MachineDetailDialog({
                     <p className="text-sm">No status data available</p>
                   </div>
                 )}
-              </div>
+                </TabsContent>
+
+                <TabsContent value="history" className="space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <LineChart className="w-5 h-5 text-primary" />
+                    <h3 className="text-lg font-semibold">Status History</h3>
+                  </div>
+
+                  <MachineStatusChart 
+                    statusHistory={statusHistory} 
+                    isLoading={loadingStatus} 
+                  />
+                </TabsContent>
+              </Tabs>
 
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4">

@@ -38,7 +38,8 @@ export function useStatus() {
     try {
       const { error, data } = await getMachineStatusByMachineId(machineId);
       if (!error) {
-        return data;
+        // Return the latest status (first item if array)
+        return Array.isArray(data) ? data[0] : data;
       } else {
         setError("Failed to fetch machine status");
         return null;

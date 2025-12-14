@@ -2,8 +2,12 @@ import React from "react";
 import AddMachineStatus from "@/components/machine/AddMachineStatus";
 import HeaderText from "@/components/HeaderText";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 function AddMachineStatusPage({ onCreateStatus, machines = [], onStatusAdded }) {
+  const location = useLocation();
+  const preSelectedMachine = location.state?.selectedMachine;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -20,6 +24,7 @@ function AddMachineStatusPage({ onCreateStatus, machines = [], onStatusAdded }) 
           onCreateStatus={onCreateStatus}
           machines={machines}
           onStatusAdded={onStatusAdded}
+          defaultMachineId={preSelectedMachine}
         />
       </div>
     </motion.div>

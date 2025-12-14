@@ -42,9 +42,9 @@ const getPriorityVariant = (priority) => {
 const getStatusVariant = (status) => {
   switch (status?.toUpperCase()) {
     case "OPEN":
-      return "default";
+      return "info";
     case "IN_PROGRESS":
-      return "warning";
+      return "purple";
     case "RESOLVED":
       return "success";
     default:

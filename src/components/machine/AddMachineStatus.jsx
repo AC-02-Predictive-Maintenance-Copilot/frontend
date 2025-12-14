@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { containerVariants, itemVariants } from "@/components/MotionVariant";
 
 // Zod validation schema
@@ -94,11 +94,11 @@ const formSchema = z.object({
   failureType: z.string().optional(),
 });
 
-function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
+function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded, defaultMachineId = null }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      machineId: "",
+      machineId: defaultMachineId || "",
       type: "",
       airTemperature: "",
       processTemperature: "",
@@ -113,12 +113,14 @@ function AddMachineStatus({ onCreateStatus, machines = [], onStatusAdded }) {
   const onSubmit = async (data) => {
     try {
       console.log("Form data before submission:", data);
+      
       const promise = onCreateStatus(data);
       toast.promise(promise, {
         loading: "Adding machine status...",
         success: () => {
           form.reset();
           if (onStatusAdded) onStatusAdded();
+          
           return "Machine status added successfully! ✅";
         },
         error: (err) => err?.message || "Failed to add machine status",

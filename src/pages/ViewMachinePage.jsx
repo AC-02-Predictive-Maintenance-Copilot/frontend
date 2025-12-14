@@ -2,28 +2,45 @@ import React, { useState } from "react";
 import MachineCard from "@/components/machine/MachineCard";
 import MachineDetailDialog from "@/components/machine/MachineDetailDialog";
 import HeaderText from "@/components/HeaderText";
-import { Input } from "@/components/ui/input";
-import { Search, Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MachineFilters } from "@/components/machine/MachineFilters";
+import { filterStorage } from "@/utils/storage";
+import { exportMachinesToCSV } from "@/utils/export";
+import { Card, CardContent } from "@/components/ui/card";
+import { Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import { machineContainerVariants, emptyStateVariants } from "@/components/MotionVariant";
 import { toast } from "sonner";
 
 function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine, onFetchMachineStatus }) {
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedMachine, setSelectedMachine] = useState(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 
-  // Filter machines based on search query
-  const filteredMachines = machines.filter((machine) => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      machine.nama?.toLowerCase().includes(searchLower) ||
-      machine.id?.toString().toLowerCase().includes(searchLower) ||
-      machine.name?.toLowerCase().includes(searchLower) ||
-      machine.productId?.toString().toLowerCase().includes(searchLower)
-    );
-  });
+  const [filters, setFilters] = React.useState(() => 
+    filterStorage.loadMachineFilters()
+  );
+
+  React.useEffect(() => {
+    filterStorage.saveMachineFilters(filters);
+  }, [filters]);
+
+  const filteredMachines = React.useMemo(() => {
+    if (!machines) return [];
+
+    return machines.filter((machine) => {
+      // Search filter
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const matchSearch =
+          machine.name?.toLowerCase().includes(searchLower) ||
+          machine.productId?.toLowerCase().includes(searchLower) ||
+          machine.id?.toString().includes(searchLower);
+
+        if (!matchSearch) return false;
+      }
+
+      return true;
+    });
+  }, [machines, filters]);
 
   const handleCardClick = (machine) => {
     setSelectedMachine(machine);
@@ -56,6 +73,10 @@ function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine, onFetc
     }
   };
 
+  const handleExport = () => {
+    exportMachinesToCSV(filteredMachines);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -69,29 +90,13 @@ function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine, onFetc
           subtitle="View and manage all your machines"
         />
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div className="relative w-full sm:w-96">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              type="text"
-              placeholder="Search by name or ID..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* Filter Button belum fungsi rencana berisi filter kondisi mesin nantinya */}
-            <Button variant="outline" size="sm">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
-            <div className="text-sm text-muted-foreground">
-              {filteredMachines.length} of {machines.length} machines
-            </div>
-          </div>
-        </div>
+        {/* Filters */}
+        <MachineFilters
+          filters={filters}
+          onFiltersChange={setFilters}
+          onExport={handleExport}
+          totalResults={filteredMachines.length}
+        />
 
         {/* Machine Cards Grid */}
         {filteredMachines.length > 0 ? (
@@ -100,7 +105,7 @@ function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine, onFetc
             variants={machineContainerVariants}
             initial="hidden"
             animate="visible"
-            key={searchQuery} // Re-trigger animation when search changes
+            key={filters.search} // Re-trigger animation when search changes
           >
             {filteredMachines.map((machine) => (
               <MachineCard 
@@ -111,22 +116,24 @@ function ViewMachinePage({ machines = [], onDeleteMachine, onEditMachine, onFetc
             ))}
           </motion.div>
         ) : (
-          <motion.div 
-            className="flex flex-col items-center justify-center py-12 text-center"
-            variants={emptyStateVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-              <Search className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h3 className="text-lg font-semibold mb-2">No machines found</h3>
-            <p className="text-muted-foreground">
-              {searchQuery
-                ? `No machines match "${searchQuery}"`
-                : "No machines available"}
-            </p>
-          </motion.div>
+          <Card>
+            <CardContent className="py-12">
+              <motion.div 
+                className="flex flex-col items-center justify-center text-center"
+                variants={emptyStateVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <Settings className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No machines found</h3>
+                <p className="text-muted-foreground text-sm max-w-md">
+                  {machines.length === 0
+                    ? "No machines have been added yet. Create your first machine to get started."
+                    : "No machines match your current filters. Try adjusting your search criteria."}
+                </p>
+              </motion.div>
+            </CardContent>
+          </Card>
         )}
       </div>
 
