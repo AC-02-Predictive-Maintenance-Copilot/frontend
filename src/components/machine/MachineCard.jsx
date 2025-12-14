@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Settings, Plus, Activity } from "lucide-react";
+import { Settings, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { machineCardVariants } from "../MotionVariant";
 import { useNavigate } from "react-router-dom";
@@ -89,7 +89,7 @@ function MachineCard({ machine, onCardClick }) {
               size="sm" 
               className="flex-1 gap-1.5 text-xs h-8"
             >
-              <Activity className="w-3.5 h-3.5" />
+              <Plus className="w-3.5 h-3.5" />
               Status
             </Button>
           </div>

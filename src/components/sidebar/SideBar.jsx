@@ -119,11 +119,11 @@ function SideBar({ onLogout, user }) {
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
-              <Bot className="h-5 w-5" />
+              <img src="/logo-png.png" alt="AEGIS Logo" className="h-5 w-5" />
             </motion.div>
             <div className="flex flex-col overflow-hidden group-data-[collapsible=icon]:hidden">
               <span className="font-semibold text-sm truncate">
-                Maintenance Copilot
+                AEGIS Maintenance Copilot
               </span>
             </div>
           </motion.div>
