@@ -115,11 +115,11 @@ function SideBar({ onLogout, user }) {
             transition={{ duration: 0.3 }}
           >
             <motion.div 
-              className="flex h-10 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neutral-200 text-primary-foreground"
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
-              <img src="/logo-png.png" alt="AEGIS Logo" className="h-5 w-5" />
+              <img src="/logo-png.png" alt="AEGIS Logo" className="h-7 w-7" />
             </motion.div>
             <div className="flex flex-col overflow-hidden group-data-[collapsible=icon]:hidden">
               <span className="font-semibold text-sm truncate">
