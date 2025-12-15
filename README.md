@@ -1,5 +1,6 @@
 
 # AEGIS
+![IMG-20251210-WA0021](https://github.com/user-attachments/assets/d42bcf62-cc5c-4150-8675-85871d6041cb)
 
 AEGIS adalah aplikasi web berbasis React yang menyediakan antarmuka pengguna modern untuk interaksi chatbot, manajemen tiket, dan pengelolaan mesin. Proyek ini dirancang untuk mendukung kebutuhan monitoring, analisis, dan kolaborasi berbasis web dengan tampilan responsif dan fitur lengkap.
 
